@@ -1,7 +1,7 @@
 import OpenAI from "openai";
 
 const configuration = {
-	apiKey: process.env.NEXT_OPENAI_API_URL,
+	apiKey: process.env.OPENAI_API_KEY,
 };
 
 interface ChatGptResponse {

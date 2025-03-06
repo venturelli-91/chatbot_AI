@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { Button } from "flowbite-react";
 
-const ChatInput = () => {
+interface ChatInputProps {
+	onSendMessage: (message: string) => void;
+}
+
+const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
 	const [message, setMessage] = useState("");
+
 	const sendMessage = () => {
 		if (message.trim()) {
 			console.log("Enviando mensagem:", message);
+			onSendMessage(message);
 			setMessage("");
 		}
 	};
