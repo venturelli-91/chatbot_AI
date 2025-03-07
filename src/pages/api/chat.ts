@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
+export default async function chatApi(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
@@ -9,12 +9,13 @@ export default async function handler(
 	}
 	try {
 		const { message } = req.body;
+		const apiKey = process.env.OPENAI_API_KEY;
 
 		const response = await fetch("https://api.openai.com/v1/chat/completions", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
-				Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+				Authorization: `Bearer ${apiKey}`,
 			},
 			body: JSON.stringify({
 				model: "gpt-3.5-turbo",
