@@ -1,32 +1,74 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import OpenAI from "openai";
 
-export default async function chatApi(
+// Cria uma instância do cliente OpenAI
+let openai: OpenAI | null = null;
+
+function getOpenAIClient() {
+	if (openai === null) {
+		const apiKey = process.env.OPENAI_API_KEY;
+		if (!apiKey) {
+			throw new Error(
+				"OPENAI_API_KEY não configurada nas variáveis de ambiente"
+			);
+		}
+		openai = new OpenAI({ apiKey });
+	}
+	return openai;
+}
+
+interface ChatRequestBody {
+	message: string;
+	model?: string;
+	maxTokens?: number;
+}
+
+async function getOpenAIResponse(requestBody: ChatRequestBody) {
+	try {
+		const { message, model = "gpt-3.5-turbo", maxTokens = 300 } = requestBody;
+
+		const client = getOpenAIClient();
+		const completion = await client.chat.completions.create({
+			model,
+			messages: [{ role: "user", content: message }],
+			max_tokens: maxTokens,
+		});
+		return completion.choices[0].message.content;
+	} catch (error) {
+		console.error("Erro ao chamar a API:", error);
+		throw error;
+	}
+}
+
+// Handler da API
+export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
 	if (req.method !== "POST") {
-		return res.status(405).json({ error: "Método não permitido" });
+		return res.status(405).json({ error: "Método não permitido. Use POST." });
 	}
-	try {
-		const { message } = req.body;
-		const apiKey = process.env.OPENAI_API_KEY;
 
-		const response = await fetch("https://api.openai.com/v1/chat/completions", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${apiKey}`,
-			},
-			body: JSON.stringify({
-				model: "gpt-3.5-turbo",
-				messages: [{ role: "user", content: message }],
-			}),
+	try {
+		const { message, model, maxTokens } = req.body as ChatRequestBody;
+
+		if (!message || typeof message !== "string") {
+			return res
+				.status(400)
+				.json({ error: "É necessário fornecer uma mensagem válida." });
+		}
+
+		const response = await getOpenAIResponse({
+			message,
+			model,
+			maxTokens: maxTokens ? Number(maxTokens) : undefined,
 		});
 
-		const data = await response.json();
-		return res.status(200).json(data);
+		return res.status(200).json({ response });
 	} catch (error) {
-		console.error("Erro ao processar a requisição:", error);
-		res.status(500).json({ error: "Erro ao processar a requisição" });
+		return res.status(500).json({
+			error: "Erro ao processar a requisição",
+			message: error instanceof Error ? error.message : "Erro desconhecido",
+		});
 	}
 }
