@@ -1,4 +1,4 @@
-# Real-Time Chatbot 🤖
+# Chatbot em Tempo Real 🤖
 
 [![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
 [![Next.js](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
@@ -9,41 +9,41 @@
 [![Node.js](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)](https://expressjs.com/)
 
-## 📝 Description
+## 📝 Descrição
 
-A modern and intelligent **Real-Time Chatbot** built with **React** on the frontend and **Node.js** on the backend. This application enables users to interact with a conversational AI through a smooth and intuitive interface.
+Um **Chatbot em Tempo Real** moderno e inteligente construído com **React** no frontend e **Node.js** no backend. Esta aplicação permite aos usuários interagir com uma IA conversacional através de uma interface suave e intuitiva.
 
-Whether you need customer support, information assistance, or just want to experiment with conversational AI, this chatbot provides instant, intelligent responses to enhance user engagement and satisfaction.
+Seja para atendimento ao cliente, assistência informativa ou apenas para experimentar IA conversacional, este chatbot fornece respostas inteligentes instantâneas para melhorar o engajamento e a satisfação do usuário.
 
-## ✨ Preview
+## ✨ Prévia
 
 <div align="center">
-  <img src="https://github.com/venturelli-91/chatbot_AI/raw/main/chatbot_experimental.png" alt="Chatbot Preview" width="600"/>
+  <img src="https://github.com/venturelli-91/chatbot_AI/raw/main/chatbot_experimental.png" alt="Prévia do Chatbot" width="600"/>
 </div>
 
-- PS: This is an experimental version, not used with a paid API.
+- OBS: Esta é uma versão experimental, não utilizada com uma API paga.
 
-## 📌 Features
+## 📌 Funcionalidades
 
-- **Real-Time Responses**: Instant, intelligent responses to user queries, providing a smooth and interactive experience.
+- **Respostas em Tempo Real**: Respostas instantâneas e inteligentes às consultas dos usuários, proporcionando uma experiência fluida e interativa.
 
-- **Responsive UI**: Built with React and styled with Tailwind CSS, offering a modern and clean interface that adapts to all screen sizes.
+- **UI Responsiva**: Construída com React e estilizada com Tailwind CSS, oferecendo uma interface moderna e limpa que se adapta a todos os tamanhos de tela.
 
-- **Custom AI Logic**: The backend processes input with custom logic and is easily extensible to integrate third-party AI services like Dialogflow or OpenAI.
+- **Lógica de IA Personalizada**: O backend processa entradas com lógica personalizada e é facilmente extensível para integrar serviços de IA de terceiros como Dialogflow ou OpenAI.
 
-- **Scalable Backend**: Powered by Node.js, ensuring fast and efficient request handling even as traffic grows.
+- **Backend Escalável**: Alimentado por Node.js, garantindo processamento rápido e eficiente de requisições mesmo com o crescimento do tráfego.
 
-- **Intuitive Design**: Tailwind CSS ensures a minimalistic, user-friendly design that enhances the conversation experience.
+- **Design Intuitivo**: Tailwind CSS garante um design minimalista e amigável que melhora a experiência de conversação.
 
-- **Modular Architecture**: Easily extendable components and backend services, allowing for new features and AI model integrations.
+- **Arquitetura Modular**: Componentes e serviços de backend facilmente extensíveis, permitindo novos recursos e integrações de modelos de IA.
 
-- **TypeScript for Safety**: TypeScript ensures improved code quality with static type checking, reducing bugs and improving maintainability.
+- **TypeScript para Segurança**: TypeScript garante melhor qualidade de código com verificação de tipo estático, reduzindo bugs e melhorando a manutenção.
 
-- **Optimized State Management**: Zustand com hooks personalizáveis para gerenciamento eficiente de estado e memoização, reduzindo renderizações desnecessárias e melhorando o desempenho.
+- **Gerenciamento de Estado Otimizado**: Zustand com hooks personalizáveis para gerenciamento eficiente de estado e memoização, reduzindo renderizações desnecessárias e melhorando o desempenho.
 
-- **Local Storage Persistence**: Utilização de localStorage para persistência de dados entre sessões, garantindo uma experiência contínua para o usuário.
+- **Persistência com Local Storage**: Utilização de localStorage para persistência de dados entre sessões, garantindo uma experiência contínua para o usuário.
 
-## 🚀 Technologies Used
+## 🚀 Tecnologias Utilizadas
 
 <div style="display: inline-flex; gap: 10px; align-items: center;">
   <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nextjs/nextjs-original.svg" alt="Next.js" width="30" height="30"/>
@@ -59,57 +59,57 @@ Whether you need customer support, information assistance, or just want to exper
 ## 🚢 Deploy
 
 <div align="center">
-  <h3>Deployment in Progress!</h3>
-  <p>This project is currently being deployed to Vercel. The application will be available soon with all features ready to explore.</p>
-  <p><strong>Stay tuned for the launch!</strong> 🚀</p>
+  <h3>Implantação em Andamento!</h3>
+  <p>Este projeto está atualmente sendo implementado na Vercel. A aplicação estará disponível em breve com todos os recursos prontos para explorar.</p>
+  <p><strong>Fique ligado para o lançamento!</strong> 🚀</p>
 </div>
 
-## 🏃‍♂️ How to Run the Project
+## 🏃‍♂️ Como Executar o Projeto
 
-1. Clone this repository:
+1. Clone este repositório:
 
    ```bash
    git clone https://github.com/yourusername/realtime-chatbot.git
    ```
 
-2. Navigate to the project directory:
+2. Navegue até o diretório do projeto:
 
    ```bash
    cd realtime-chatbot
    ```
 
-3. Install dependencies:
+3. Instale as dependências:
 
    ```bash
    npm install
    ```
 
-4. Start the development server:
+4. Inicie o servidor de desenvolvimento:
 
    ```bash
    npm run dev
    ```
 
-5. Open your browser and go to http://localhost:3000 to interact with the chatbot.
+5. Abra seu navegador e acesse http://localhost:3000 para interagir com o chatbot.
 
-## 📊 Project Status
+## 📊 Status do Projeto
 
-![Status](https://img.shields.io/badge/Status-In%20Development-brightgreen)
+![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-brightgreen)
 
-## 👨‍💻 Contributing
+## 👨‍💻 Contribuições
 
-Feel free to fork this repository and submit pull requests. All contributions are welcome =D.
+Sinta-se à vontade para fazer fork deste repositório e enviar pull requests. Todas as contribuições são bem-vindas =D.
 
-## 📬 Contact
+## 📬 Contato
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/aurelioventurelli)
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/venturelli-91)
 
 ---
 
-## 📁 Future steps:
+## 📁 Próximos passos:
 
-- Addition of Flowbite in terms of UI/UX;
+- Adição do Flowbite em termos de UI/UX;
 
-Developed by Aurélio Venturelli.
+Desenvolvido por Aurélio Venturelli.
 
