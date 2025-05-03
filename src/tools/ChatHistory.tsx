@@ -13,7 +13,7 @@ const ChatHistory: React.FC = () => {
 	}, [messages]);
 
 	return (
-		<div className="flex-1 overflow-y-auto px-4 py-4 h-[400px] bg-blue-50/50">
+		<div className="flex-1 overflow-y-auto px-4 py-4 h-[400px]">
 			{messages.length === 0 ? (
 				<div className="h-full flex flex-col items-center justify-center text-gray-500">
 					<p className="text-center font-medium">
