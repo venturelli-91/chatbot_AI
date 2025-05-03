@@ -24,12 +24,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 				className={`max-w-[75%] p-3 rounded-lg shadow-sm ${
 					isUser
 						? "bg-blue-500 text-white rounded-tr-none"
-						: "bg-white text-gray-800 rounded-tl-none"
+						: "bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded-tl-none"
 				}`}>
 				<div className="whitespace-pre-wrap">{content}</div>
 				<div
 					className={`text-xs mt-1 flex justify-end ${
-						isUser ? "text-blue-100" : "text-gray-500"
+						isUser ? "text-blue-100" : "text-gray-500 dark:text-gray-300"
 					}`}>
 					{formattedTime}
 				</div>

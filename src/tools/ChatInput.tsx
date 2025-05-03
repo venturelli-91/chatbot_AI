@@ -13,7 +13,7 @@ const ChatInput: React.FC = () => {
 	};
 
 	return (
-		<div className="sticky bottom-0 p-3">
+		<div className="sticky bottom-0 p-3 bg-white dark:bg-gray-800">
 			<form onSubmit={handleSubmit}>
 				<div className="flex items-center gap-2">
 					<div className="relative flex-grow">
@@ -22,19 +22,15 @@ const ChatInput: React.FC = () => {
 							value={inputMessage}
 							onChange={(e) => setInputMessage(e.target.value)}
 							placeholder="Digite sua mensagem..."
+							className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
 							disabled={isLoading}
-							className="w-full rounded-full border-blue-200 bg-blue-50/30 pl-4 pr-12 py-2.5 focus:border-blue-500 focus:ring-blue-400"
 						/>
 					</div>
 					<Button
 						type="submit"
-						disabled={isLoading || !inputMessage.trim()}
-						pill
-						size="sm"
-						className="flex items-center justify-center p-2.5">
-						<HiPaperAirplane
-							className={`h-5 w-5 ${isLoading ? "animate-pulse" : ""}`}
-						/>
+						disabled={isLoading}
+						className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
+						<HiPaperAirplane className="h-5 w-5" />
 					</Button>
 				</div>
 			</form>
