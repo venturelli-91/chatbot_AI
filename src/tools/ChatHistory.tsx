@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useChatStore } from "../store/chatStore";
-import ChatMessage from "./ChatMessage";
+import ChatMessage from "../tools/ChatMessage";
 import { Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 
