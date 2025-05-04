@@ -66,7 +66,7 @@ export const useChatStore = create<ChatState>((set, get) => ({
 				},
 				body: JSON.stringify({
 					message: inputMessage,
-					model: "gpt-3.5-turbo",
+					model: "mistral",
 					maxTokens: 300,
 				}),
 			});

@@ -1,20 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import OpenAI from "openai";
-
-let openai: OpenAI | null = null;
-
-function getOpenAIClient() {
-	if (openai === null) {
-		const apiKey = process.env.OPENAI_API_KEY;
-		if (!apiKey) {
-			throw new Error(
-				"OPENAI_API_KEY não configurada nas variáveis de ambiente"
-			);
-		}
-		openai = new OpenAI({ apiKey });
-	}
-	return openai;
-}
 
 interface ChatRequestBody {
 	message: string;
@@ -22,17 +6,29 @@ interface ChatRequestBody {
 	maxTokens?: number;
 }
 
-async function getOpenAIResponse(requestBody: ChatRequestBody) {
+async function getMistralResponse(requestBody: ChatRequestBody) {
 	try {
-		const { message, model = "gpt-3.5-turbo", maxTokens = 300 } = requestBody;
+		const { message, model = "mistral", maxTokens = 300 } = requestBody;
 
-		const client = getOpenAIClient();
-		const completion = await client.chat.completions.create({
-			model,
-			messages: [{ role: "user", content: message }],
-			max_tokens: maxTokens,
+		const response = await fetch("http://localhost:11434/api/generate", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				model,
+				prompt: message,
+				stream: false,
+				max_tokens: maxTokens,
+			}),
 		});
-		return completion.choices[0].message.content;
+
+		if (!response.ok) {
+			throw new Error(`Erro na API do Ollama: ${response.statusText}`);
+		}
+
+		const data = await response.json();
+		return data.response || data.text || "";
 	} catch (error) {
 		console.error("Erro ao chamar a API:", error);
 		throw error;
@@ -56,7 +52,7 @@ export default async function handler(
 				.json({ error: "É necessário fornecer uma mensagem válida." });
 		}
 
-		const response = await getOpenAIResponse({
+		const response = await getMistralResponse({
 			message,
 			model,
 			maxTokens: maxTokens ? Number(maxTokens) : undefined,
@@ -64,6 +60,7 @@ export default async function handler(
 
 		return res.status(200).json({ response });
 	} catch (error) {
+		console.error("Erro completo:", error);
 		return res.status(500).json({
 			error: "Erro ao processar a requisição",
 			message: error instanceof Error ? error.message : "Erro desconhecido",
