@@ -1,40 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Chatbot IA 🤖
 
-## Getting Started
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Flowbite](https://img.shields.io/badge/Flowbite-000000?style=for-the-badge&logo=flowbite&logoColor=white)](https://flowbite-react.com/)
+[![Zustand](https://img.shields.io/badge/Zustand-000000?style=for-the-badge&logo=zustand&logoColor=white)](https://github.com/pmndrs/zustand)
+[![Ollama](https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.ai/)
 
-First, run the development server:
+Um chatbot moderno e interativo construído com Next.js, React e TailwindCSS, utilizando o Ollama para processamento de linguagem natural.
+
+## 📸 Screenshots
+
+<div align="center">
+  <img src="screenshots/chatbot.png" alt="Interface do Chatbot" width="800px"/>
+</div>
+
+## 🚀 Tecnologias
+
+Este projeto foi desenvolvido com as seguintes tecnologias:
+
+- [Next.js](https://nextjs.org/) - Framework React para desenvolvimento web
+- [React](https://reactjs.org/) - Biblioteca JavaScript para construção de interfaces
+- [TypeScript](https://www.typescriptlang.org/) - Superset JavaScript com tipagem estática
+- [TailwindCSS](https://tailwindcss.com/) - Framework CSS utilitário
+- [Flowbite React](https://flowbite-react.com/) - Componentes React baseados em Tailwind
+- [Zustand](https://github.com/pmndrs/zustand) - Gerenciamento de estado
+- [Ollama](https://ollama.ai/) - Framework para execução local de modelos de linguagem
+
+## 📋 Pré-requisitos
+
+- Node.js (versão 18 ou superior)
+- npm ou yarn
+- [Ollama](https://ollama.ai/) instalado localmente
+- Modelo de linguagem baixado no Ollama (recomendado: llama2 ou mistral)
+
+## 🔧 Instalação
+
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/seu-usuario/chatbot_ia.git
+```
+
+2. Entre no diretório do projeto:
+
+```bash
+cd chatbot_AI
+```
+
+3. Instale as dependências:
+
+```bash
+npm install
+# ou
+yarn install
+```
+
+4. Execute o projeto em modo de desenvolvimento:
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O projeto estará disponível em `http://localhost:3000`
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Scripts Disponíveis
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Cria a versão de produção
+- `npm run start` - Inicia o servidor de produção
+- `npm run lint` - Executa o linter para verificar o código
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## 📦 Estrutura do Projeto
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+chatbot_AI/
+├── src/           # Código fonte do projeto
+├── public/        # Arquivos estáticos
+├── .next/         # Build do Next.js
+└── ...
+```
 
-## Learn More
+## 🤝 Contribuindo
 
-To learn more about Next.js, take a look at the following resources:
+1. Faça um Fork do projeto
+2. Crie uma Branch para sua Feature (`git checkout -b feature/AmazingFeature`)
+3. Faça o Commit das suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Faça o Push para a Branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## 📝 Licença
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## Deploy on Vercel
+## ✨ Recursos
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Interface moderna e responsiva
+- Chat em tempo real
+- Processamento de linguagem natural local com Ollama
+- Suporte a múltiplos idiomas
+- Integração com IA
+- Design adaptativo para diferentes dispositivos
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## 📫 Contato
+
+Aurélio Venturelli
+LinkedIn: https://www.linkedin.com/in/aurelioventurelli/
+GitHub: https://github.com/venturelli-91/chatbot_ia
