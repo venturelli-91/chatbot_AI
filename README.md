@@ -13,7 +13,12 @@ Um chatbot moderno e interativo construído com Next.js, React e TailwindCSS, ut
 ## 📸 Screenshots
 
 <div align="center">
-  <img src="screenshots/chatbot.png" alt="Interface do Chatbot" width="800px"/>
+  <table>
+    <tr>
+      <td><img src="public/chatbot_IA 1.png" alt="Interface do Chatbot - Tela 1" width="400px"/></td>
+      <td><img src="public/chatbot_IA 2.png" alt="Interface do Chatbot - Tela 2" width="400px"/></td>
+    </tr>
+  </table>
 </div>
 
 ## 🚀 Tecnologias
