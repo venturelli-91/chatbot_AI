@@ -1,22 +1,20 @@
-import React from "react";
+import type { Message } from "../store/chatStore";
 
 interface ChatMessageProps {
-	content: string;
-	role: string;
-	timestamp: Date;
+	message: Message;
 }
 
-const ChatMessage: React.FC<ChatMessageProps> = ({
-	content,
-	role,
-	timestamp,
-}) => {
+const ChatMessage = ({ message }: ChatMessageProps) => {
 	const formattedTime = new Intl.DateTimeFormat("pt-BR", {
 		hour: "2-digit",
 		minute: "2-digit",
-	}).format(typeof timestamp === "string" ? new Date(timestamp) : timestamp);
+	}).format(
+		typeof message.timestamp === "string"
+			? new Date(message.timestamp)
+			: message.timestamp
+	);
 
-	const isUser = role === "user";
+	const isUser = message.role === "user";
 
 	return (
 		<div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
@@ -26,7 +24,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 						? "bg-blue-500 text-white rounded-tr-none"
 						: "bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded-tl-none"
 				}`}>
-				<div className="whitespace-pre-wrap">{content}</div>
+				<div className="whitespace-pre-wrap">{message.content}</div>
 				<div
 					className={`text-xs mt-1 flex justify-end ${
 						isUser ? "text-blue-100" : "text-gray-500 dark:text-gray-300"

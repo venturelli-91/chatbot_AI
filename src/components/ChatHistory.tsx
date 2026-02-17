@@ -1,10 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useChatStore } from "../store/chatStore";
-import ChatMessage from "../tools/ChatMessage";
+import ChatMessage from "./ChatMessage";
 import { Alert } from "flowbite-react";
 import { HiInformationCircle } from "react-icons/hi";
 
-const ChatHistory: React.FC = () => {
+const ChatHistory = () => {
 	const { messages, error } = useChatStore();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -23,12 +23,7 @@ const ChatHistory: React.FC = () => {
 			) : (
 				<div className="space-y-3">
 					{messages.map((message) => (
-						<ChatMessage
-							key={message.id}
-							content={message.content}
-							role={message.role}
-							timestamp={message.timestamp}
-						/>
+						<ChatMessage key={message.id} message={message} />
 					))}
 				</div>
 			)}

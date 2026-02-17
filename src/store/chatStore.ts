@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface Message {
+export interface Message {
 	id: string;
 	content: string;
 	role: "user" | "assistant";
@@ -14,12 +14,8 @@ interface ChatState {
 	error: string | null;
 
 	setInputMessage: (message: string) => void;
-	addMessage: (role: "user" | "assistant", content: string) => void;
-	clearMessages: () => void;
-	setLoading: (loading: boolean) => void;
-	setError: (error: string | null) => void;
-
 	sendMessage: () => Promise<void>;
+	clearMessages: () => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -28,44 +24,34 @@ export const useChatStore = create<ChatState>((set, get) => ({
 	isLoading: false,
 	error: null,
 
-	setInputMessage: (message) => set({ inputMessage: message }),
-
-	addMessage: (role, content) =>
-		set((state) => ({
-			messages: [
-				...state.messages,
-				{
-					id: Date.now().toString(),
-					content,
-					role,
-					timestamp: new Date(),
-				},
-			],
-		})),
+	setInputMessage: (inputMessage) => set({ inputMessage }),
 
 	clearMessages: () => set({ messages: [] }),
 
-	setLoading: (loading) => set({ isLoading: loading }),
-
-	setError: (error) => set({ error }),
-
 	sendMessage: async () => {
 		const { inputMessage } = get();
-
 		if (!inputMessage.trim()) return;
 
-		get().addMessage("user", inputMessage);
-		get().setLoading(true);
-		get().setError(null);
+		const userMessage: Message = {
+			id: Date.now().toString(),
+			content: inputMessage,
+			role: "user",
+			timestamp: new Date(),
+		};
+
+		set((state) => ({
+			messages: [...state.messages, userMessage],
+			inputMessage: "",
+			isLoading: true,
+			error: null,
+		}));
 
 		try {
 			const response = await fetch("/api/chat", {
 				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
+				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
-					message: inputMessage,
+					message: userMessage.content,
 					model: "mistral",
 					maxTokens: 300,
 				}),
@@ -79,15 +65,25 @@ export const useChatStore = create<ChatState>((set, get) => ({
 				);
 			}
 
-			get().addMessage("assistant", data.response);
+			const assistantMessage: Message = {
+				id: (Date.now() + 1).toString(),
+				content: data.response,
+				role: "assistant",
+				timestamp: new Date(),
+			};
 
-			get().setInputMessage("");
+			set((state) => ({
+				messages: [...state.messages, assistantMessage],
+			}));
 		} catch (err) {
-			get().setError(
-				err instanceof Error ? err.message : "Ocorreu um erro desconhecido"
-			);
+			set({
+				error:
+					err instanceof Error
+						? err.message
+						: "Ocorreu um erro desconhecido",
+			});
 		} finally {
-			get().setLoading(false);
+			set({ isLoading: false });
 		}
 	},
 }));
