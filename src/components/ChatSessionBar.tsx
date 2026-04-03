@@ -6,8 +6,8 @@ const ChatSessionBar = () => {
 	if (!sessionTitle) return null;
 
 	return (
-		<div className="h-8 px-5 flex items-center border-b border-white/5 bg-slate-900/50 shrink-0">
-			<span className="text-xs text-slate-500 truncate">{sessionTitle}</span>
+		<div className="h-8 px-5 flex items-center border-b border-[var(--cbr)] bg-[var(--cb2)]/50 shrink-0">
+			<span className="text-xs text-[var(--ct4)] truncate">{sessionTitle}</span>
 		</div>
 	);
 };

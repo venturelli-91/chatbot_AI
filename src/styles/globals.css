@@ -2,6 +2,32 @@
 @plugin "flowbite-react/plugin/tailwindcss";
 @source "../../.flowbite-react/class-list.json";
 
+/* ─── Theme tokens ───────────────────────────────────────────────────────── */
+:root {
+	/* backgrounds */
+	--cb1: #020617; /* page      slate-950 */
+	--cb2: #0f172a; /* surface   slate-900 */
+	--cb3: #1e293b; /* elevated  slate-800 */
+	/* text */
+	--ct1: #f1f5f9; /* primary   slate-100 */
+	--ct2: #cbd5e1; /* medium    slate-300 */
+	--ct3: #94a3b8; /* secondary slate-400 */
+	--ct4: #64748b; /* muted     slate-500 */
+	/* border */
+	--cbr: rgba(255, 255, 255, 0.1);
+}
+
+html.light {
+	--cb1: #f8fafc;
+	--cb2: #ffffff;
+	--cb3: #f1f5f9;
+	--ct1: #0f172a;
+	--ct2: #334155;
+	--ct3: #475569;
+	--ct4: #64748b;
+	--cbr: rgba(0, 0, 0, 0.08);
+}
+
 *,
 *::before,
 *::after {
@@ -13,11 +39,15 @@ body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
-	background-color: #020617; /* slate-950 */
-	color: #f1f5f9; /* slate-100 */
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-		Ubuntu, sans-serif;
+	background-color: var(--cb1);
+	color: var(--ct1);
+	font-family:
+		-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+		sans-serif;
 	-webkit-font-smoothing: antialiased;
+	transition:
+		background-color 0.25s ease,
+		color 0.25s ease;
 }
 
 /* Scrollbar personalizada */
@@ -28,9 +58,9 @@ body {
 	background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-	background: rgba(255, 255, 255, 0.12);
+	background: var(--cbr);
 	border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-	background: rgba(255, 255, 255, 0.2);
+	background: var(--ct4);
 }

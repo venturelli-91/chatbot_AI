@@ -17,7 +17,7 @@ export default function SettingsPage() {
 		setOllamaStatus("loading");
 		try {
 			const res = await fetch(
-				`/api/models?ollamaUrl=${encodeURIComponent(settings.ollamaUrl)}`
+				`/api/models?ollamaUrl=${encodeURIComponent(settings.ollamaUrl)}`,
 			);
 			setOllamaStatus(res.ok ? "ok" : "error");
 		} catch {
@@ -31,11 +31,11 @@ export default function SettingsPage() {
 	};
 
 	return (
-		<div className="h-full overflow-y-auto bg-slate-950">
+		<div className="h-full overflow-y-auto bg-[var(--cb1)]">
 			<div className="max-w-2xl mx-auto py-8 px-6 flex flex-col gap-5">
 				<div>
-					<h1 className="text-xl font-bold text-slate-100">Configurações</h1>
-					<p className="text-sm text-slate-400 mt-1">
+					<h1 className="text-xl font-bold text-[var(--ct1)]">Configurações</h1>
+					<p className="text-sm text-[var(--ct3)] mt-1">
 						Personalize o comportamento do assistente
 					</p>
 				</div>
@@ -61,16 +61,14 @@ export default function SettingsPage() {
 							value={settings.ollamaUrl}
 							onChange={(e) => updateSettings({ ollamaUrl: e.target.value })}
 							placeholder="http://localhost:11434"
-							className="bg-slate-800 border border-white/10 text-slate-100 text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-violet-500/50 transition-colors placeholder-slate-500"
+							className="bg-[var(--cb3)] border border-[var(--cbr)] text-[var(--ct1)] text-sm rounded-xl px-3 py-2.5 focus:outline-none focus:border-violet-500/50 transition-colors placeholder-[var(--ct4)]"
 						/>
 						<div className="flex items-center gap-3">
 							<button
 								onClick={testConnection}
 								disabled={ollamaStatus === "loading"}
-								className="py-2 px-4 rounded-xl bg-slate-800 border border-white/10 text-slate-300 text-sm hover:border-violet-500/30 hover:text-slate-100 transition-all disabled:opacity-40">
-								{ollamaStatus === "loading"
-									? "Testando..."
-									: "Testar conexão"}
+								className="py-2 px-4 rounded-xl bg-[var(--cb3)] border border-[var(--cbr)] text-[var(--ct2)] text-sm hover:border-violet-500/30 hover:text-[var(--ct1)] transition-all disabled:opacity-40">
+								{ollamaStatus === "loading" ? "Testando..." : "Testar conexão"}
 							</button>
 							{ollamaStatus === "ok" && (
 								<span className="text-sm text-emerald-400 font-medium">

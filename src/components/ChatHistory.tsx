@@ -19,14 +19,17 @@ const ChatHistory = () => {
 			) : (
 				<div className="flex flex-col gap-5">
 					{messages.map((message) => (
-						<ChatMessage key={message.id} message={message} />
+						<ChatMessage
+							key={message.id}
+							message={message}
+						/>
 					))}
 					{isLoading && (
 						<div className="flex gap-3">
 							<div className="shrink-0 w-8 h-8 rounded-full bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-md">
 								<HiSparkles className="w-4 h-4 text-white" />
 							</div>
-							<div className="px-4 py-3 bg-slate-800 border border-white/10 rounded-2xl rounded-tl-sm flex items-center gap-1.5">
+							<div className="px-4 py-3 bg-[var(--cb3)] border border-[var(--cbr)] rounded-2xl rounded-tl-sm flex items-center gap-1.5">
 								{[0, 150, 300].map((delay) => (
 									<span
 										key={delay}

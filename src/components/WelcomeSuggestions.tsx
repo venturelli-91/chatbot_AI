@@ -23,8 +23,10 @@ const WelcomeSuggestions = () => {
 					<HiSparkles className="w-7 h-7 text-violet-400" />
 				</div>
 				<div className="text-center">
-					<p className="font-semibold text-slate-200 mb-1">Como posso ajudar?</p>
-					<p className="text-sm text-slate-400">
+					<p className="font-semibold text-[var(--ct1)] mb-1">
+						Como posso ajudar?
+					</p>
+					<p className="text-sm text-[var(--ct3)]">
 						Envie uma mensagem ou escolha uma sugestão
 					</p>
 				</div>
@@ -35,7 +37,7 @@ const WelcomeSuggestions = () => {
 					<button
 						key={prompt}
 						onClick={() => handleSuggestion(prompt)}
-						className="bg-slate-800/60 border border-white/10 rounded-xl p-3 text-left text-sm text-slate-300 hover:bg-slate-800 hover:border-violet-500/30 hover:text-slate-100 transition-all leading-snug">
+						className="bg-[var(--cb3)]/60 border border-[var(--cbr)] rounded-xl p-3 text-left text-sm text-[var(--ct2)] hover:bg-[var(--cb3)] hover:border-violet-500/30 hover:text-[var(--ct1)] transition-all leading-snug">
 						{prompt}
 					</button>
 				))}

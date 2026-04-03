@@ -14,13 +14,15 @@ const NavItem = ({ href, icon: Icon, label }: NavItemProps) => {
 	const isActive = pathname === href;
 
 	return (
-		<Tooltip content={label} placement="right">
+		<Tooltip
+			content={label}
+			placement="right">
 			<Link
 				href={href}
 				className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
 					isActive
 						? "bg-violet-600 text-white shadow-lg shadow-violet-900/40"
-						: "text-slate-400 hover:text-slate-100 hover:bg-slate-800"
+						: "text-[var(--ct3)] hover:text-[var(--ct1)] hover:bg-[var(--cb3)]"
 				}`}>
 				<Icon className="w-5 h-5" />
 			</Link>

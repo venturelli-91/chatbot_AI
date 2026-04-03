@@ -17,7 +17,7 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 	}).format(
 		typeof message.timestamp === "string"
 			? new Date(message.timestamp)
-			: message.timestamp
+			: message.timestamp,
 	);
 
 	const isUser = message.role === "user";
@@ -52,16 +52,18 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 						className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
 							isUser
 								? "bg-linear-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm"
-								: "bg-slate-800 text-slate-100 border border-white/10 rounded-tl-sm"
+								: "bg-[var(--cb3)] text-[var(--ct1)] border border-[var(--cbr)] rounded-tl-sm"
 						}`}>
 						<p className="whitespace-pre-wrap">{message.content}</p>
 					</div>
 
 					{!isUser && (
-						<Tooltip content={copied ? "Copiado!" : "Copiar"} placement="top">
+						<Tooltip
+							content={copied ? "Copiado!" : "Copiar"}
+							placement="top">
 							<button
 								onClick={handleCopy}
-								className="absolute -top-2 -right-2 w-6 h-6 rounded-md bg-slate-700 border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+								className="absolute -top-2 -right-2 w-6 h-6 rounded-md bg-[var(--cb3)] border border-[var(--cbr)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
 								{copied ? (
 									<HiCheck className="w-3 h-3 text-emerald-400" />
 								) : (
@@ -72,7 +74,7 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 					)}
 				</div>
 
-				<span className="text-xs text-slate-500 px-1">{formattedTime}</span>
+				<span className="text-xs text-[var(--ct4)] px-1">{formattedTime}</span>
 			</div>
 		</div>
 	);

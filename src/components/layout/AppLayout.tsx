@@ -7,7 +7,7 @@ interface AppLayoutProps {
 
 const AppLayout = ({ children }: AppLayoutProps) => {
 	return (
-		<div className="flex h-screen bg-slate-950 overflow-hidden">
+		<div className="flex h-screen bg-[var(--cb1)] overflow-hidden">
 			<Sidebar />
 			<main className="flex-1 overflow-hidden">{children}</main>
 		</div>

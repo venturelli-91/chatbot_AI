@@ -36,13 +36,13 @@ const ChatInput = () => {
 		charCount >= 490
 			? "text-red-400"
 			: charCount >= 400
-			? "text-amber-400"
-			: "text-slate-500";
+				? "text-amber-400"
+				: "text-[var(--ct4)]";
 
 	return (
-		<div className="px-5 py-4 bg-slate-900 border-t border-white/10 shrink-0">
+		<div className="px-5 py-4 bg-[var(--cb2)] border-t border-[var(--cbr)] shrink-0">
 			<form onSubmit={handleSubmit}>
-				<div className="flex items-end gap-3 bg-slate-800 rounded-xl px-4 py-3 border border-white/10 focus-within:border-violet-500/50 transition-colors">
+				<div className="flex items-end gap-3 bg-[var(--cb3)] rounded-xl px-4 py-3 border border-[var(--cbr)] focus-within:border-violet-500/50 transition-colors">
 					<textarea
 						ref={textareaRef}
 						rows={1}
@@ -50,7 +50,7 @@ const ChatInput = () => {
 						onChange={(e) => setInputMessage(e.target.value)}
 						onKeyDown={handleKeyDown}
 						placeholder="Digite sua mensagem..."
-						className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none resize-none overflow-y-auto max-h-32 leading-relaxed"
+						className="flex-1 bg-transparent text-[var(--ct1)] placeholder-[var(--ct4)] text-sm focus:outline-none resize-none overflow-y-auto max-h-32 leading-relaxed"
 						disabled={isLoading}
 					/>
 					<div className="flex items-center gap-2 shrink-0 pb-0.5">

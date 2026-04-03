@@ -35,30 +35,32 @@ const ConversationCard = ({ session }: ConversationCardProps) => {
 	const modelName = session.model.split(":")[0];
 
 	return (
-		<div className="bg-slate-900 border border-white/10 rounded-2xl p-5 flex flex-col gap-3 hover:border-white/20 transition-colors">
+		<div className="bg-[var(--cb2)] border border-[var(--cbr)] rounded-2xl p-5 flex flex-col gap-3 hover:border-[var(--ct4)] transition-colors">
 			<div className="flex items-start justify-between gap-3">
 				<div className="flex-1 min-w-0">
-					<h3 className="font-semibold text-slate-100 text-sm truncate">
+					<h3 className="font-semibold text-[var(--ct1)] text-sm truncate">
 						{session.title}
 					</h3>
-					<p className="text-xs text-slate-500 mt-0.5">{formattedDate}</p>
+					<p className="text-xs text-[var(--ct4)] mt-0.5">{formattedDate}</p>
 				</div>
-				<Tooltip content="Excluir" placement="left">
+				<Tooltip
+					content="Excluir"
+					placement="left">
 					<button
 						onClick={() => deleteSession(session.id)}
-						className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-all shrink-0">
+						className="w-7 h-7 rounded-lg flex items-center justify-center text-[var(--ct4)] hover:text-red-400 hover:bg-red-500/10 transition-all shrink-0">
 						<HiTrash className="w-4 h-4" />
 					</button>
 				</Tooltip>
 			</div>
 
-			<p className="text-sm text-slate-400 leading-relaxed line-clamp-2">
+			<p className="text-sm text-[var(--ct3)] leading-relaxed line-clamp-2">
 				{session.preview}
 			</p>
 
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-2">
-					<span className="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-white/10">
+					<span className="text-xs px-2 py-0.5 rounded-full bg-[var(--cb3)] text-[var(--ct3)] border border-[var(--cbr)]">
 						{session.messages.length} mensagens
 					</span>
 					<span className="text-xs px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30">
