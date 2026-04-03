@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useHistoryStore } from "./historyStore";
 
 export interface Message {
 	id: string;
@@ -53,8 +54,23 @@ export const useChatStore = create<ChatState>()(
 
 			clearError: () => set({ error: null }),
 
-			clearMessages: () =>
-				set({ messages: [], error: null, sessionTitle: null }),
+			clearMessages: () => {
+				const { messages, sessionTitle, activeModel } = get();
+				if (messages.length > 0) {
+					const firstAssistant = messages.find((m) => m.role === "assistant");
+					useHistoryStore.getState().saveSession({
+						id: Date.now().toString(),
+						title: sessionTitle ?? "Conversa sem título",
+						preview: firstAssistant
+							? firstAssistant.content.slice(0, 80)
+							: messages[0].content.slice(0, 80),
+						messages,
+						createdAt: new Date().toISOString(),
+						model: activeModel,
+					});
+				}
+				set({ messages: [], error: null, sessionTitle: null });
+			},
 
 			updateSettings: (patch) =>
 				set((state) => ({ settings: { ...state.settings, ...patch } })),
