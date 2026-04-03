@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { HiSparkles } from "react-icons/hi2";
 import { HiUser, HiClipboard, HiCheck } from "react-icons/hi";
 import { Tooltip } from "flowbite-react";
@@ -80,4 +80,4 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 	);
 };
 
-export default ChatMessage;
+export default memo(ChatMessage);
