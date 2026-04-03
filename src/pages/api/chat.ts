@@ -1,11 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
 import { validateOllamaUrl } from "../../lib/validateUrl";
+import { checkRateLimit } from "../../lib/rateLimit";
+import { OLLAMA_DEFAULT_URL } from "../../lib/env";
 
-const DEFAULT_OLLAMA_URL = "http://localhost:11434";
 const DEFAULT_MODEL = "mistral";
 const DEFAULT_MAX_TOKENS = 300;
 const FETCH_TIMEOUT_MS = 30_000;
+
+function getClientIp(req: NextApiRequest): string {
+	const forwarded = req.headers["x-forwarded-for"];
+	if (typeof forwarded === "string") return forwarded.split(",")[0].trim();
+	if (Array.isArray(forwarded)) return forwarded[0];
+	return (req.socket as { remoteAddress?: string })?.remoteAddress ?? "unknown";
+}
 
 const ChatSchema = z.object({
 	message: z
@@ -78,6 +86,12 @@ export default async function handler(
 		return res.status(405).json({ error: "Método não permitido. Use POST." });
 	}
 
+	const rl = checkRateLimit(getClientIp(req));
+	if (!rl.allowed) {
+		res.setHeader("Retry-After", String(rl.retryAfter));
+		return res.status(429).json({ error: "Muitas requisições. Tente novamente em breve." });
+	}
+
 	const parsed = ChatSchema.safeParse(req.body);
 	if (!parsed.success) {
 		return res.status(400).json({
@@ -88,8 +102,8 @@ export default async function handler(
 
 	const { message, model, maxTokens, ollamaUrl } = parsed.data;
 	const baseUrl = validateOllamaUrl(
-		ollamaUrl ?? DEFAULT_OLLAMA_URL,
-		DEFAULT_OLLAMA_URL,
+		ollamaUrl ?? OLLAMA_DEFAULT_URL,
+		OLLAMA_DEFAULT_URL,
 	);
 
 	try {
