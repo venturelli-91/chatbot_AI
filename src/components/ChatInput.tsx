@@ -1,5 +1,4 @@
 import { useChatStore } from "../store/chatStore";
-import { Button } from "flowbite-react";
 import { HiPaperAirplane } from "react-icons/hi";
 
 const ChatInput = () => {
@@ -11,24 +10,53 @@ const ChatInput = () => {
 		sendMessage();
 	};
 
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter" && !e.shiftKey) {
+			e.preventDefault();
+			sendMessage();
+		}
+	};
+
 	return (
-		<div className="sticky bottom-0 p-3 bg-white dark:bg-gray-800">
+		<div className="px-5 py-4 bg-slate-900 border-t border-white/10 shrink-0">
 			<form onSubmit={handleSubmit}>
-				<div className="flex items-center gap-2">
+				<div className="flex items-center gap-3 bg-slate-800 rounded-xl px-4 py-3 border border-white/10 focus-within:border-violet-500/50 transition-colors">
 					<input
 						type="text"
 						value={inputMessage}
 						onChange={(e) => setInputMessage(e.target.value)}
+						onKeyDown={handleKeyDown}
 						placeholder="Digite sua mensagem..."
-						className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+						className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 text-sm focus:outline-none"
 						disabled={isLoading}
 					/>
-					<Button
+					<button
 						type="submit"
-						disabled={isLoading}
-						className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
-						<HiPaperAirplane className="h-5 w-5" />
-					</Button>
+						disabled={isLoading || !inputMessage.trim()}
+						className="shrink-0 w-9 h-9 rounded-lg bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white disabled:opacity-40 disabled:cursor-not-allowed hover:from-violet-500 hover:to-indigo-500 transition-all shadow-lg shadow-violet-900/30">
+						{isLoading ? (
+							<svg
+								className="w-4 h-4 animate-spin"
+								fill="none"
+								viewBox="0 0 24 24">
+								<circle
+									className="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									strokeWidth="4"
+								/>
+								<path
+									className="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+								/>
+							</svg>
+						) : (
+							<HiPaperAirplane className="w-4 h-4" />
+						)}
+					</button>
 				</div>
 			</form>
 		</div>
