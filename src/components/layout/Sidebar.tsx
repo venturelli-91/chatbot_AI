@@ -1,5 +1,5 @@
 import { HiCog } from "react-icons/hi";
-import { HiChatBubbleLeft, HiClockRotateLeft } from "react-icons/hi2";
+import { HiChatBubbleLeft, HiClock } from "react-icons/hi2";
 import NavItem from "./NavItem";
 
 const Sidebar = () => {
@@ -11,7 +11,7 @@ const Sidebar = () => {
 
 			<nav className="flex flex-col gap-1 items-center">
 				<NavItem href="/" icon={HiChatBubbleLeft} label="Chat" />
-				<NavItem href="/history" icon={HiClockRotateLeft} label="Histórico" />
+				<NavItem href="/history" icon={HiClock} label="Histórico" />
 				<NavItem href="/settings" icon={HiCog} label="Configurações" />
 			</nav>
 		</aside>

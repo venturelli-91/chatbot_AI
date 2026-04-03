@@ -1,4 +1,4 @@
-import { HiClockRotateLeft } from "react-icons/hi2";
+import { HiClock } from "react-icons/hi2";
 import { useHistoryStore } from "../store/historyStore";
 import ConversationCard from "../components/history/ConversationCard";
 
@@ -18,7 +18,7 @@ export default function HistoryPage() {
 				{sessions.length === 0 ? (
 					<div className="flex flex-col items-center justify-center gap-4 py-24 text-slate-500">
 						<div className="w-16 h-16 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center">
-							<HiClockRotateLeft className="w-7 h-7" />
+							<HiClock className="w-7 h-7" />
 						</div>
 						<div className="text-center">
 							<p className="font-semibold text-slate-300 mb-1">
