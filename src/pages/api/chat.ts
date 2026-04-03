@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
+import { validateOllamaUrl } from "../../lib/validateUrl";
 
 const DEFAULT_OLLAMA_URL = "http://localhost:11434";
 const DEFAULT_MODEL = "mistral";
 const DEFAULT_MAX_TOKENS = 300;
+const FETCH_TIMEOUT_MS = 30_000;
 
 const ChatSchema = z.object({
 	message: z
@@ -15,8 +17,16 @@ const ChatSchema = z.object({
 	ollamaUrl: z.string().url("URL do Ollama inválida").optional(),
 });
 
+function fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
+	const controller = new AbortController();
+	const id = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+	return fetch(url, { ...init, signal: controller.signal }).finally(() =>
+		clearTimeout(id),
+	);
+}
+
 async function getAvailableModels(baseUrl: string): Promise<string[]> {
-	const response = await fetch(`${baseUrl}/api/tags`);
+	const response = await fetchWithTimeout(`${baseUrl}/api/tags`, {});
 	if (!response.ok) return [];
 	const data = await response.json();
 	return data.models?.map((model: { name: string }) => model.name) || [];
@@ -36,7 +46,7 @@ async function generateResponse(
 	maxTokens: number,
 	baseUrl: string,
 ): Promise<string> {
-	const response = await fetch(`${baseUrl}/api/generate`, {
+	const response = await fetchWithTimeout(`${baseUrl}/api/generate`, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({
@@ -77,7 +87,7 @@ export default async function handler(
 	}
 
 	const { message, model, maxTokens, ollamaUrl } = parsed.data;
-	const baseUrl = ollamaUrl ?? DEFAULT_OLLAMA_URL;
+	const baseUrl = validateOllamaUrl(ollamaUrl ?? DEFAULT_OLLAMA_URL, DEFAULT_OLLAMA_URL);
 
 	try {
 		const availableModels = await getAvailableModels(baseUrl);

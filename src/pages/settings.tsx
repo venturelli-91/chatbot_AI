@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal } from "flowbite-react";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "flowbite-react";
 import { useChatStore } from "../store/chatStore";
 import SettingsSection from "../components/settings/SettingsSection";
 import ModelSelector from "../components/settings/ModelSelector";
@@ -106,14 +106,14 @@ export default function SettingsPage() {
 				show={showClearModal}
 				size="md"
 				onClose={() => setShowClearModal(false)}>
-				<Modal.Header>Limpar histórico</Modal.Header>
-				<Modal.Body>
+				<ModalHeader>Limpar histórico</ModalHeader>
+				<ModalBody>
 					<p className="text-slate-400 text-sm">
 						Essa ação apagará todas as mensagens permanentemente. Deseja
 						continuar?
 					</p>
-				</Modal.Body>
-				<Modal.Footer>
+				</ModalBody>
+				<ModalFooter>
 					<button
 						onClick={handleClear}
 						className="py-2 px-4 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm transition-colors">
@@ -124,7 +124,7 @@ export default function SettingsPage() {
 						className="py-2 px-4 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-100 text-sm transition-colors">
 						Cancelar
 					</button>
-				</Modal.Footer>
+				</ModalFooter>
 			</Modal>
 		</div>
 	);

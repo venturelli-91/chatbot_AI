@@ -73,14 +73,18 @@ export const useChatStore = create<ChatState>()(
 			},
 
 			updateSettings: (patch) =>
-				set((state) => ({ settings: { ...state.settings, ...patch } })),
-
+					set((state) => ({
+						settings: { ...state.settings, ...patch },
+						// mantém activeModel sincronizado quando model é alterado
+						...(patch.model ? { activeModel: patch.model } : {}),
+					})),
 			sendMessage: async () => {
 				const { inputMessage, messages, settings } = get();
 				if (!inputMessage.trim()) return;
 
+				const userMsgId = `${Date.now()}-u`;
 				const userMessage: Message = {
-					id: Date.now().toString(),
+					id: userMsgId,
 					content: inputMessage,
 					role: "user",
 					timestamp: new Date(),
@@ -128,7 +132,7 @@ export const useChatStore = create<ChatState>()(
 					});
 
 					const assistantMessage: Message = {
-						id: (Date.now() + 1).toString(),
+						id: `${Date.now()}-a`,
 						content: data.response,
 						role: "assistant",
 						timestamp: new Date(),
@@ -138,12 +142,15 @@ export const useChatStore = create<ChatState>()(
 						messages: [...state.messages, assistantMessage],
 					}));
 				} catch (err) {
-					set({
+					// Remove a mensagem do usuário sem resposta e restaura o input
+					set((state) => ({
+						messages: state.messages.filter((m) => m.id !== userMsgId),
 						error:
 							err instanceof Error
 								? err.message
 								: "Ocorreu um erro desconhecido",
-					});
+						inputMessage: userMessage.content,
+					}));
 				} finally {
 					set({ isLoading: false });
 				}
