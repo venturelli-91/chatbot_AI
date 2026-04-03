@@ -1,15 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
 
 const DEFAULT_OLLAMA_URL = "http://localhost:11434";
 const DEFAULT_MODEL = "mistral";
 const DEFAULT_MAX_TOKENS = 300;
 
-interface ChatRequestBody {
-	message: string;
-	model?: string;
-	maxTokens?: number;
-	ollamaUrl?: string;
-}
+const ChatSchema = z.object({
+	message: z.string().min(1, "Mensagem não pode ser vazia").max(4000, "Mensagem muito longa"),
+	model: z.string().optional(),
+	maxTokens: z.number().int().min(50).max(4000).optional(),
+	ollamaUrl: z.string().url("URL do Ollama inválida").optional(),
+});
 
 async function getAvailableModels(baseUrl: string): Promise<string[]> {
 	const response = await fetch(`${baseUrl}/api/tags`);
@@ -64,15 +65,15 @@ export default async function handler(
 		return res.status(405).json({ error: "Método não permitido. Use POST." });
 	}
 
-	const { message, model, maxTokens, ollamaUrl } =
-		req.body as ChatRequestBody;
-	const baseUrl = ollamaUrl || DEFAULT_OLLAMA_URL;
-
-	if (!message || typeof message !== "string") {
-		return res
-			.status(400)
-			.json({ error: "É necessário fornecer uma mensagem válida." });
+	const parsed = ChatSchema.safeParse(req.body);
+	if (!parsed.success) {
+		return res.status(400).json({
+			error: parsed.error.issues[0]?.message ?? "Dados inválidos na requisição.",
+		});
 	}
+
+	const { message, model, maxTokens, ollamaUrl } = parsed.data;
+	const baseUrl = ollamaUrl ?? DEFAULT_OLLAMA_URL;
 
 	try {
 		const availableModels = await getAvailableModels(baseUrl);
