@@ -1,11 +1,12 @@
 import { useRef, useEffect } from "react";
 import { useChatStore } from "../store/chatStore";
 import { HiPaperAirplane } from "react-icons/hi";
+import { HiStopCircle } from "react-icons/hi2";
 
 const MAX_CHARS = 500;
 
 const ChatInput = () => {
-	const { inputMessage, setInputMessage, sendMessage, isLoading } =
+	const { inputMessage, setInputMessage, sendMessage, cancelMessage, isLoading } =
 		useChatStore();
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const charCount = inputMessage.length;
@@ -65,34 +66,23 @@ const ChatInput = () => {
 								{charCount}/{MAX_CHARS}
 							</span>
 						)}
+					{isLoading ? (
+						<button
+							type="button"
+							onClick={cancelMessage}
+							aria-label="Cancelar resposta"
+							className="w-9 h-9 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all">
+							<HiStopCircle className="w-4 h-4" />
+						</button>
+					) : (
 						<button
 							type="submit"
-							disabled={isLoading || !inputMessage.trim() || overLimit}
-							aria-label={isLoading ? "Enviando mensagem" : "Enviar mensagem"}
+							disabled={!inputMessage.trim() || overLimit}
+							aria-label="Enviar mensagem"
 							className="w-9 h-9 rounded-lg bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white disabled:opacity-40 disabled:cursor-not-allowed hover:from-violet-500 hover:to-indigo-500 transition-all shadow-lg shadow-violet-900/30">
-							{isLoading ? (
-								<svg
-									className="w-4 h-4 animate-spin"
-									fill="none"
-									viewBox="0 0 24 24">
-									<circle
-										className="opacity-25"
-										cx="12"
-										cy="12"
-										r="10"
-										stroke="currentColor"
-										strokeWidth="4"
-									/>
-									<path
-										className="opacity-75"
-										fill="currentColor"
-										d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-									/>
-								</svg>
-							) : (
-								<HiPaperAirplane className="w-4 h-4" />
-							)}
+							<HiPaperAirplane className="w-4 h-4" />
 						</button>
+					)}
 					</div>
 				</div>
 			</form>

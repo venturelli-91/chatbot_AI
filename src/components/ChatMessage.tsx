@@ -6,9 +6,10 @@ import type { Message } from "../store/chatStore";
 
 interface ChatMessageProps {
 	message: Message;
+	isStreaming?: boolean;
 }
 
-const ChatMessage = ({ message }: ChatMessageProps) => {
+const ChatMessage = ({ message, isStreaming = false }: ChatMessageProps) => {
 	const [copied, setCopied] = useState(false);
 
 	const formattedTime = new Intl.DateTimeFormat("pt-BR", {
@@ -57,7 +58,15 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 								? "bg-linear-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm"
 								: "bg-[var(--cb3)] text-[var(--ct1)] border border-[var(--cbr)] rounded-tl-sm"
 						}`}>
-						<p className="whitespace-pre-wrap">{message.content}</p>
+						<p className="whitespace-pre-wrap">
+						{message.content}
+						{isStreaming && (
+							<span
+								className="inline-block w-0.5 h-4 bg-violet-400 ml-0.5 align-middle animate-pulse"
+								aria-hidden="true"
+							/>
+						)}
+					</p>
 					</div>
 
 					{!isUser && (

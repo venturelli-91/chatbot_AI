@@ -6,6 +6,7 @@ import ChatInput from "../../components/ChatInput";
 // Mock do store para controlar o estado nos testes
 const mockSendMessage = vi.fn();
 const mockSetInputMessage = vi.fn();
+const mockCancelMessage = vi.fn();
 
 let mockInputMessage = "";
 let mockIsLoading = false;
@@ -15,6 +16,7 @@ vi.mock("../../store/chatStore", () => ({
 		inputMessage: mockInputMessage,
 		setInputMessage: mockSetInputMessage,
 		sendMessage: mockSendMessage,
+		cancelMessage: mockCancelMessage,
 		isLoading: mockIsLoading,
 	}),
 }));
@@ -25,6 +27,7 @@ describe("ChatInput", () => {
 		mockIsLoading = false;
 		mockSendMessage.mockReset();
 		mockSetInputMessage.mockReset();
+		mockCancelMessage.mockReset();
 	});
 
 	it("renderiza o textarea com placeholder correto", () => {
@@ -49,13 +52,22 @@ describe("ChatInput", () => {
 		).toBeDisabled();
 	});
 
-	it("botão de envio está desabilitado durante carregamento", () => {
+	it("exibe botão cancelar durante carregamento", () => {
 		mockInputMessage = "Olá";
 		mockIsLoading = true;
 		render(<ChatInput />);
 		expect(
-			screen.getByRole("button", { name: /enviando mensagem/i }),
-		).toBeDisabled();
+			screen.getByRole("button", { name: /cancelar resposta/i }),
+		).toBeInTheDocument();
+	});
+
+	it("chama cancelMessage ao clicar em cancelar", async () => {
+		mockInputMessage = "Olá";
+		mockIsLoading = true;
+		const user = userEvent.setup();
+		render(<ChatInput />);
+		await user.click(screen.getByRole("button", { name: /cancelar resposta/i }));
+		expect(mockCancelMessage).toHaveBeenCalledTimes(1);
 	});
 
 	it("textarea está desabilitado durante carregamento", () => {

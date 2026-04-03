@@ -5,7 +5,8 @@ import WelcomeSuggestions from "./WelcomeSuggestions";
 import { HiSparkles, HiXMark } from "react-icons/hi2";
 
 const ChatHistory = () => {
-	const { messages, isLoading, error, clearError } = useChatStore();
+	const { messages, isLoading, error, clearError, streamingMessageId } =
+		useChatStore();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -27,9 +28,10 @@ const ChatHistory = () => {
 						<ChatMessage
 							key={message.id}
 							message={message}
+							isStreaming={message.id === streamingMessageId}
 						/>
 					))}
-					{isLoading && (
+					{isLoading && !streamingMessageId && (
 						<div className="flex gap-3">
 							<div className="shrink-0 w-8 h-8 rounded-full bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-md">
 								<HiSparkles className="w-4 h-4 text-white" />

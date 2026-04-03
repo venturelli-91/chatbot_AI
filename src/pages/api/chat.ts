@@ -6,7 +6,8 @@ import { OLLAMA_DEFAULT_URL } from "../../lib/env";
 
 const DEFAULT_MODEL = "mistral";
 const DEFAULT_MAX_TOKENS = 300;
-const FETCH_TIMEOUT_MS = 30_000;
+const FETCH_TIMEOUT_MS = 60_000;
+const MAX_CONTEXT_MESSAGES = 10;
 
 function getClientIp(req: NextApiRequest): string {
 	const forwarded = req.headers["x-forwarded-for"];
@@ -14,6 +15,11 @@ function getClientIp(req: NextApiRequest): string {
 	if (Array.isArray(forwarded)) return forwarded[0];
 	return (req.socket as { remoteAddress?: string })?.remoteAddress ?? "unknown";
 }
+
+const HistoryMessageSchema = z.object({
+	role: z.enum(["user", "assistant"]),
+	content: z.string().max(4000),
+});
 
 const ChatSchema = z.object({
 	message: z
@@ -23,59 +29,32 @@ const ChatSchema = z.object({
 	model: z.string().optional(),
 	maxTokens: z.number().int().min(50).max(4000).optional(),
 	ollamaUrl: z.string().url("URL do Ollama inválida").optional(),
+	history: z.array(HistoryMessageSchema).max(20).optional(),
 });
 
-function fetchWithTimeout(url: string, init: RequestInit): Promise<Response> {
+function fetchWithTimeout(
+	url: string,
+	init: RequestInit,
+	timeoutMs = FETCH_TIMEOUT_MS,
+): Promise<Response> {
 	const controller = new AbortController();
-	const id = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+	const id = setTimeout(() => controller.abort(), timeoutMs);
 	return fetch(url, { ...init, signal: controller.signal }).finally(() =>
 		clearTimeout(id),
 	);
 }
 
 async function getAvailableModels(baseUrl: string): Promise<string[]> {
-	const response = await fetchWithTimeout(`${baseUrl}/api/tags`, {});
+	const response = await fetchWithTimeout(`${baseUrl}/api/tags`, {}, 10_000);
 	if (!response.ok) return [];
 	const data = await response.json();
-	return data.models?.map((model: { name: string }) => model.name) || [];
+	return data.models?.map((m: { name: string }) => m.name) ?? [];
 }
 
 function resolveModel(requested: string, available: string[]): string {
-	const baseRequested = requested.split(":")[0];
-	if (available.some((m) => m.includes(baseRequested))) {
-		return requested;
-	}
+	const base = requested.split(":")[0];
+	if (available.some((m) => m.includes(base))) return requested;
 	return available[0];
-}
-
-async function generateResponse(
-	message: string,
-	model: string,
-	maxTokens: number,
-	baseUrl: string,
-): Promise<string> {
-	const response = await fetchWithTimeout(`${baseUrl}/api/generate`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
-			model,
-			prompt: message,
-			stream: false,
-			options: { num_predict: maxTokens },
-		}),
-	});
-
-	if (!response.ok) {
-		const errorData = await response.json().catch(() => null);
-		throw new Error(
-			errorData?.error
-				? `Erro na API do Ollama: ${response.statusText} - ${errorData.error}`
-				: `Erro na API do Ollama: ${response.statusText}`,
-		);
-	}
-
-	const data = await response.json();
-	return data.response || data.text || "";
 }
 
 export default async function handler(
@@ -89,22 +68,27 @@ export default async function handler(
 	const rl = checkRateLimit(getClientIp(req));
 	if (!rl.allowed) {
 		res.setHeader("Retry-After", String(rl.retryAfter));
-		return res.status(429).json({ error: "Muitas requisições. Tente novamente em breve." });
+		return res
+			.status(429)
+			.json({ error: "Muitas requisições. Tente novamente em breve." });
 	}
 
 	const parsed = ChatSchema.safeParse(req.body);
 	if (!parsed.success) {
 		return res.status(400).json({
-			error:
-				parsed.error.issues[0]?.message ?? "Dados inválidos na requisição.",
+			error: parsed.error.issues[0]?.message ?? "Dados inválidos na requisição.",
 		});
 	}
 
-	const { message, model, maxTokens, ollamaUrl } = parsed.data;
-	const baseUrl = validateOllamaUrl(
-		ollamaUrl ?? OLLAMA_DEFAULT_URL,
-		OLLAMA_DEFAULT_URL,
-	);
+	const {
+		message,
+		model,
+		maxTokens = DEFAULT_MAX_TOKENS,
+		ollamaUrl,
+		history = [],
+	} = parsed.data;
+
+	const baseUrl = validateOllamaUrl(ollamaUrl ?? OLLAMA_DEFAULT_URL, OLLAMA_DEFAULT_URL);
 
 	try {
 		const availableModels = await getAvailableModels(baseUrl);
@@ -117,25 +101,86 @@ export default async function handler(
 			});
 		}
 
-		const modelToUse = resolveModel(model || DEFAULT_MODEL, availableModels);
+		const modelToUse = resolveModel(model ?? DEFAULT_MODEL, availableModels);
 
-		const response = await generateResponse(
-			message,
-			modelToUse,
-			maxTokens ?? DEFAULT_MAX_TOKENS,
-			baseUrl,
-		);
+		// Build messages with conversation context (last N turns)
+		const contextMessages = history
+			.slice(-MAX_CONTEXT_MESSAGES)
+			.map(({ role, content }) => ({ role, content }));
+		contextMessages.push({ role: "user" as const, content: message });
 
-		return res.status(200).json({
-			response,
-			modelUsed: modelToUse,
-			availableModels,
+		// Set streaming headers before writing body
+		res.setHeader("Content-Type", "text/plain; charset=utf-8");
+		res.setHeader("Cache-Control", "no-cache, no-transform");
+		res.setHeader("X-Accel-Buffering", "no");
+
+		const ollamaRes = await fetchWithTimeout(`${baseUrl}/api/chat`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				model: modelToUse,
+				messages: contextMessages,
+				stream: true,
+				options: { num_predict: maxTokens },
+			}),
 		});
+
+		if (!ollamaRes.ok) {
+			const errData = await ollamaRes.json().catch(() => null);
+			res.write(
+				JSON.stringify({
+					error: `Erro do Ollama: ${errData?.error ?? ollamaRes.statusText}`,
+				}) + "\n",
+			);
+			return res.end();
+		}
+
+		const reader = ollamaRes.body!.getReader();
+		const decoder = new TextDecoder();
+		let buffer = "";
+
+		while (true) {
+			const { done, value } = await reader.read();
+			if (done) break;
+
+			buffer += decoder.decode(value, { stream: true });
+			const lines = buffer.split("\n");
+			buffer = lines.pop() ?? "";
+
+			for (const line of lines) {
+				if (!line.trim()) continue;
+				let data: Record<string, unknown>;
+				try {
+					data = JSON.parse(line);
+				} catch {
+					continue;
+				}
+
+				const msg = data.message as { content?: string } | undefined;
+				if (msg?.content) {
+					res.write(JSON.stringify({ token: msg.content }) + "\n");
+				}
+
+				if (data.done) {
+					res.write(
+						JSON.stringify({ done: true, modelUsed: modelToUse, availableModels }) +
+							"\n",
+					);
+				}
+			}
+		}
+
+		res.end();
 	} catch (error) {
-		const isConnectionError =
+		const isConnection =
 			error instanceof TypeError && error.message.includes("fetch");
 
-		if (isConnectionError) {
+		if (res.headersSent) {
+			res.write(JSON.stringify({ error: "Erro durante a geração" }) + "\n");
+			return res.end();
+		}
+
+		if (isConnection) {
 			return res.status(503).json({
 				error: "Serviço Ollama não está disponível",
 				message: `Verifique se o Ollama está rodando em ${baseUrl}`,

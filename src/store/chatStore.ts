@@ -24,9 +24,11 @@ interface ChatState {
 	availableModels: string[];
 	sessionTitle: string | null;
 	settings: ChatSettings;
+	streamingMessageId: string | null;
 
 	setInputMessage: (message: string) => void;
 	sendMessage: () => Promise<void>;
+	cancelMessage: () => void;
 	clearMessages: () => void;
 	clearError: () => void;
 	updateSettings: (patch: Partial<ChatSettings>) => void;
@@ -37,6 +39,9 @@ const DEFAULT_SETTINGS: ChatSettings = {
 	maxTokens: 300,
 	ollamaUrl: "http://localhost:11434",
 };
+
+// Module-level AbortController — non-serializable, kept outside the store
+let _abortController: AbortController | null = null;
 
 export const useChatStore = create<ChatState>()(
 	persist(
@@ -49,10 +54,27 @@ export const useChatStore = create<ChatState>()(
 			availableModels: [],
 			sessionTitle: null,
 			settings: DEFAULT_SETTINGS,
+			streamingMessageId: null,
 
 			setInputMessage: (inputMessage) => set({ inputMessage }),
 
 			clearError: () => set({ error: null }),
+
+			cancelMessage: () => {
+				_abortController?.abort();
+				_abortController = null;
+				const { streamingMessageId } = get();
+				set((state) => ({
+					isLoading: false,
+					streamingMessageId: null,
+					// Remove empty streaming message if cancelled before any content
+					messages: streamingMessageId
+						? state.messages.filter(
+								(m) => m.id !== streamingMessageId || m.content.length > 0,
+							)
+						: state.messages,
+				}));
+			},
 
 			clearMessages: () => {
 				const { messages, sessionTitle, activeModel } = get();
@@ -80,9 +102,15 @@ export const useChatStore = create<ChatState>()(
 				})),
 			sendMessage: async () => {
 				const { inputMessage, messages, settings } = get();
-				if (!inputMessage.trim()) return;
+				if (!inputMessage.trim() || get().isLoading) return;
+
+				// Cancel any pending request before starting a new one
+				_abortController?.abort();
+				const controller = new AbortController();
+				_abortController = controller;
 
 				const userMsgId = `${Date.now()}-u`;
+				const assistantMsgId = `${Date.now() + 1}-a`;
 				const userMessage: Message = {
 					id: userMsgId,
 					content: inputMessage,
@@ -96,6 +124,11 @@ export const useChatStore = create<ChatState>()(
 						(inputMessage.trim().length > 40 ? "…" : "")
 					: get().sessionTitle;
 
+				// Build context history (last 10 messages before the current one)
+				const history = messages
+					.slice(-10)
+					.map(({ role, content }) => ({ role, content }));
+
 				set((state) => ({
 					messages: [...state.messages, userMessage],
 					inputMessage: "",
@@ -104,54 +137,117 @@ export const useChatStore = create<ChatState>()(
 					sessionTitle: newTitle,
 				}));
 
+				let streamingStarted = false;
+
 				try {
 					const response = await fetch("/api/chat", {
 						method: "POST",
 						headers: { "Content-Type": "application/json" },
+						signal: controller.signal,
 						body: JSON.stringify({
 							message: userMessage.content,
 							model: settings.model,
 							maxTokens: settings.maxTokens,
 							ollamaUrl: settings.ollamaUrl,
+							history,
 						}),
 					});
 
-					const data = await response.json();
-
 					if (!response.ok) {
+						const data = await response.json().catch(() => ({}));
 						throw new Error(
-							data.message || data.error || "Erro ao processar solicitação",
+							(data as { message?: string; error?: string }).message ??
+								(data as { error?: string }).error ??
+								"Erro ao processar solicitação",
 						);
 					}
 
-					set({
-						activeModel: data.modelUsed ?? get().activeModel,
-						availableModels: data.availableModels?.length
-							? data.availableModels
-							: get().availableModels,
-					});
+					if (!response.body) throw new Error("Resposta sem corpo");
 
-					const assistantMessage: Message = {
-						id: `${Date.now()}-a`,
-						content: data.response,
-						role: "assistant",
-						timestamp: new Date(),
-					};
-
+					// Add empty assistant message — will be filled token by token
+					streamingStarted = true;
 					set((state) => ({
-						messages: [...state.messages, assistantMessage],
+						messages: [
+							...state.messages,
+							{
+								id: assistantMsgId,
+								content: "",
+								role: "assistant" as const,
+								timestamp: new Date(),
+							},
+						],
+						streamingMessageId: assistantMsgId,
 					}));
+
+					const reader = response.body.getReader();
+					const decoder = new TextDecoder();
+					let buffer = "";
+
+					while (true) {
+						const { done, value } = await reader.read();
+						if (done) break;
+
+						buffer += decoder.decode(value, { stream: true });
+						const lines = buffer.split("\n");
+						buffer = lines.pop() ?? "";
+
+						for (const line of lines) {
+							if (!line.trim()) continue;
+							let data: Record<string, unknown>;
+							try {
+								data = JSON.parse(line);
+							} catch {
+								continue;
+							}
+
+							if (data.error) {
+								throw new Error(data.error as string);
+							}
+
+							if (data.token) {
+								set((state) => ({
+									messages: state.messages.map((m) =>
+										m.id === assistantMsgId
+											? { ...m, content: m.content + (data.token as string) }
+											: m,
+									),
+								}));
+							}
+
+							if (data.done) {
+								set({
+									activeModel:
+										(data.modelUsed as string) ?? get().activeModel,
+									availableModels: Array.isArray(data.availableModels) &&
+										(data.availableModels as string[]).length
+										? (data.availableModels as string[])
+										: get().availableModels,
+									streamingMessageId: null,
+								});
+							}
+						}
+					}
 				} catch (err) {
-					// Remove a mensagem do usuário sem resposta e restaura o input
+					if (err instanceof Error && err.name === "AbortError") {
+						// User cancelled — keep partial content if any was streamed
+						set({ streamingMessageId: null });
+						return;
+					}
+
 					set((state) => ({
-						messages: state.messages.filter((m) => m.id !== userMsgId),
+						messages: state.messages.filter((m) => {
+							if (!streamingStarted) return m.id !== userMsgId;
+							return m.id !== userMsgId && m.id !== assistantMsgId;
+						}),
 						error:
 							err instanceof Error
 								? err.message
 								: "Ocorreu um erro desconhecido",
 						inputMessage: userMessage.content,
+						streamingMessageId: null,
 					}));
 				} finally {
+					_abortController = null;
 					set({ isLoading: false });
 				}
 			},

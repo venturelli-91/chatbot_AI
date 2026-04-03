@@ -90,7 +90,7 @@ describe("chatStore", () => {
 			expect(messages[0].role).toBe("user");
 			expect(messages[0].content).toBe("Oi!");
 			expect(messages[1].role).toBe("assistant");
-			expect(messages[1].content).toBe("Resposta simulada do assistente.");
+			expect(messages[1].content).toBe("Resposta simulada.");
 		});
 
 		it("limpa inputMessage após envio", async () => {
