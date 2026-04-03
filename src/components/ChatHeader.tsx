@@ -2,6 +2,7 @@ import { HiSparkles } from "react-icons/hi2";
 import { HiTrash } from "react-icons/hi";
 import { Tooltip } from "flowbite-react";
 import { useChatStore } from "../store/chatStore";
+import ModelBadge from "./ModelBadge";
 
 const ChatHeader = () => {
 	const { messages, clearMessages } = useChatStore();
@@ -16,11 +17,14 @@ const ChatHeader = () => {
 					</div>
 					<span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-slate-900 rounded-full" />
 				</div>
-				<div className="flex flex-col">
+				<div className="flex flex-col gap-1">
 					<span className="font-semibold text-slate-100 text-sm leading-tight">
 						AI Assistant
 					</span>
-					<span className="text-xs text-emerald-400 font-medium">Online</span>
+					<div className="flex items-center gap-2">
+						<span className="text-xs text-emerald-400 font-medium">Online</span>
+						<ModelBadge />
+					</div>
 				</div>
 			</div>
 

@@ -12,6 +12,8 @@ interface ChatState {
 	inputMessage: string;
 	isLoading: boolean;
 	error: string | null;
+	activeModel: string;
+	availableModels: string[];
 
 	setInputMessage: (message: string) => void;
 	sendMessage: () => Promise<void>;
@@ -24,6 +26,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
 	inputMessage: "",
 	isLoading: false,
 	error: null,
+	activeModel: "mistral",
+	availableModels: [],
 
 	setInputMessage: (inputMessage) => set({ inputMessage }),
 
@@ -67,6 +71,13 @@ export const useChatStore = create<ChatState>((set, get) => ({
 					data.message || data.error || "Erro ao processar solicitação"
 				);
 			}
+
+			set({
+				activeModel: data.modelUsed ?? get().activeModel,
+				availableModels: data.availableModels?.length
+					? data.availableModels
+					: get().availableModels,
+			});
 
 			const assistantMessage: Message = {
 				id: (Date.now() + 1).toString(),
