@@ -1,6 +1,6 @@
 # Nebula Chat
 
-[![CI](https://github.com/actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
+[![CI](https://github.com/venturelli-91/chatbot_AI/actions/workflows/ci.yml/badge.svg)](https://github.com/venturelli-91/chatbot_AI/actions/workflows/ci.yml)
 [![Next.js](https://img.shields.io/badge/Next.js_15-000?logo=nextdotjs&logoColor=fff)](#)
 [![React](https://img.shields.io/badge/React_19-20232A?logo=react&logoColor=61DAFB)](#)
 [![TypeScript](https://img.shields.io/badge/TypeScript_5-3178C6?logo=typescript&logoColor=fff)](#)
@@ -157,17 +157,6 @@ MIT
 [![Ollama](https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white)](https://ollama.ai/)
 
 Um chatbot moderno e interativo construído com Next.js, React e TailwindCSS, utilizando o Ollama para processamento de linguagem natural.
-
-## 📸 Screenshots
-
-<div align="center">
-  <table>
-    <tr>
-      <td><img src="public/chatbot_IA 1.png" alt="Interface do Chatbot - Tela 1" width="400px"/></td>
-      <td><img src="public/chatbot_IA 2.png" alt="Interface do Chatbot - Tela 2" width="400px"/></td>
-    </tr>
-  </table>
-</div>
 
 ## 🚀 Tecnologias
 
