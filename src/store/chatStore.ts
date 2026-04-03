@@ -216,12 +216,12 @@ export const useChatStore = create<ChatState>()(
 
 							if (data.done) {
 								set({
-									activeModel:
-										(data.modelUsed as string) ?? get().activeModel,
-									availableModels: Array.isArray(data.availableModels) &&
+									activeModel: (data.modelUsed as string) ?? get().activeModel,
+									availableModels:
+										Array.isArray(data.availableModels) &&
 										(data.availableModels as string[]).length
-										? (data.availableModels as string[])
-										: get().availableModels,
+											? (data.availableModels as string[])
+											: get().availableModels,
 									streamingMessageId: null,
 								});
 							}

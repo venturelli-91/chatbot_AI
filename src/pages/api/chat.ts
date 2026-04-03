@@ -76,7 +76,8 @@ export default async function handler(
 	const parsed = ChatSchema.safeParse(req.body);
 	if (!parsed.success) {
 		return res.status(400).json({
-			error: parsed.error.issues[0]?.message ?? "Dados inválidos na requisição.",
+			error:
+				parsed.error.issues[0]?.message ?? "Dados inválidos na requisição.",
 		});
 	}
 
@@ -88,7 +89,10 @@ export default async function handler(
 		history = [],
 	} = parsed.data;
 
-	const baseUrl = validateOllamaUrl(ollamaUrl ?? OLLAMA_DEFAULT_URL, OLLAMA_DEFAULT_URL);
+	const baseUrl = validateOllamaUrl(
+		ollamaUrl ?? OLLAMA_DEFAULT_URL,
+		OLLAMA_DEFAULT_URL,
+	);
 
 	try {
 		const availableModels = await getAvailableModels(baseUrl);
@@ -163,8 +167,11 @@ export default async function handler(
 
 				if (data.done) {
 					res.write(
-						JSON.stringify({ done: true, modelUsed: modelToUse, availableModels }) +
-							"\n",
+						JSON.stringify({
+							done: true,
+							modelUsed: modelToUse,
+							availableModels,
+						}) + "\n",
 					);
 				}
 			}

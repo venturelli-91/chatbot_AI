@@ -23,7 +23,10 @@ export function checkRateLimit(ip: string): RateLimitResult {
 	}
 
 	if (entry.count >= MAX_REQUESTS) {
-		return { allowed: false, retryAfter: Math.ceil((entry.reset - now) / 1000) };
+		return {
+			allowed: false,
+			retryAfter: Math.ceil((entry.reset - now) / 1000),
+		};
 	}
 
 	entry.count++;

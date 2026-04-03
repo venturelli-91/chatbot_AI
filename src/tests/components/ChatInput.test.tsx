@@ -66,7 +66,9 @@ describe("ChatInput", () => {
 		mockIsLoading = true;
 		const user = userEvent.setup();
 		render(<ChatInput />);
-		await user.click(screen.getByRole("button", { name: /cancelar resposta/i }));
+		await user.click(
+			screen.getByRole("button", { name: /cancelar resposta/i }),
+		);
 		expect(mockCancelMessage).toHaveBeenCalledTimes(1);
 	});
 

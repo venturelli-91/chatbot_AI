@@ -6,8 +6,13 @@ import { HiStopCircle } from "react-icons/hi2";
 const MAX_CHARS = 500;
 
 const ChatInput = () => {
-	const { inputMessage, setInputMessage, sendMessage, cancelMessage, isLoading } =
-		useChatStore();
+	const {
+		inputMessage,
+		setInputMessage,
+		sendMessage,
+		cancelMessage,
+		isLoading,
+	} = useChatStore();
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const charCount = inputMessage.length;
 	const overLimit = charCount > MAX_CHARS;
@@ -66,23 +71,23 @@ const ChatInput = () => {
 								{charCount}/{MAX_CHARS}
 							</span>
 						)}
-					{isLoading ? (
-						<button
-							type="button"
-							onClick={cancelMessage}
-							aria-label="Cancelar resposta"
-							className="w-9 h-9 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all">
-							<HiStopCircle className="w-4 h-4" />
-						</button>
-					) : (
-						<button
-							type="submit"
-							disabled={!inputMessage.trim() || overLimit}
-							aria-label="Enviar mensagem"
-							className="w-9 h-9 rounded-lg bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white disabled:opacity-40 disabled:cursor-not-allowed hover:from-violet-500 hover:to-indigo-500 transition-all shadow-lg shadow-violet-900/30">
-							<HiPaperAirplane className="w-4 h-4" />
-						</button>
-					)}
+						{isLoading ? (
+							<button
+								type="button"
+								onClick={cancelMessage}
+								aria-label="Cancelar resposta"
+								className="w-9 h-9 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 hover:bg-red-500/20 transition-all">
+								<HiStopCircle className="w-4 h-4" />
+							</button>
+						) : (
+							<button
+								type="submit"
+								disabled={!inputMessage.trim() || overLimit}
+								aria-label="Enviar mensagem"
+								className="w-9 h-9 rounded-lg bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white disabled:opacity-40 disabled:cursor-not-allowed hover:from-violet-500 hover:to-indigo-500 transition-all shadow-lg shadow-violet-900/30">
+								<HiPaperAirplane className="w-4 h-4" />
+							</button>
+						)}
 					</div>
 				</div>
 			</form>

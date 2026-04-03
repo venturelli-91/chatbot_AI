@@ -59,14 +59,14 @@ const ChatMessage = ({ message, isStreaming = false }: ChatMessageProps) => {
 								: "bg-[var(--cb3)] text-[var(--ct1)] border border-[var(--cbr)] rounded-tl-sm"
 						}`}>
 						<p className="whitespace-pre-wrap">
-						{message.content}
-						{isStreaming && (
-							<span
-								className="inline-block w-0.5 h-4 bg-violet-400 ml-0.5 align-middle animate-pulse"
-								aria-hidden="true"
-							/>
-						)}
-					</p>
+							{message.content}
+							{isStreaming && (
+								<span
+									className="inline-block w-0.5 h-4 bg-violet-400 ml-0.5 align-middle animate-pulse"
+									aria-hidden="true"
+								/>
+							)}
+						</p>
 					</div>
 
 					{!isUser && (
