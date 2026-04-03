@@ -17,7 +17,12 @@ const ChatHistory = () => {
 			{messages.length === 0 ? (
 				<WelcomeSuggestions />
 			) : (
-				<div className="flex flex-col gap-5">
+				<div
+					className="flex flex-col gap-5"
+					role="log"
+					aria-live="polite"
+					aria-label="Histórico de mensagens"
+					aria-relevant="additions">
 					{messages.map((message) => (
 						<ChatMessage
 							key={message.id}
@@ -49,8 +54,7 @@ const ChatHistory = () => {
 						<span className="font-semibold">Erro:</span> {error}
 					</span>
 					<button
-						onClick={clearError}
-						className="shrink-0 w-5 h-5 flex items-center justify-center text-red-400/60 hover:text-red-400 transition-colors">
+						onClick={clearError}					aria-label="Fechar mensagem de erro"						className="shrink-0 w-5 h-5 flex items-center justify-center text-red-400/60 hover:text-red-400 transition-colors">
 						<HiXMark className="w-4 h-4" />
 					</button>
 				</div>

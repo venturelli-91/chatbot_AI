@@ -50,18 +50,25 @@ const ChatInput = () => {
 						onChange={(e) => setInputMessage(e.target.value)}
 						onKeyDown={handleKeyDown}
 						placeholder="Digite sua mensagem..."
+						aria-label="Mensagem para o assistente"
+						aria-describedby="char-counter"
 						className="flex-1 bg-transparent text-[var(--ct1)] placeholder-[var(--ct4)] text-sm focus:outline-none resize-none overflow-y-auto max-h-32 leading-relaxed"
 						disabled={isLoading}
 					/>
 					<div className="flex items-center gap-2 shrink-0 pb-0.5">
 						{charCount > 0 && (
-							<span className={`text-xs tabular-nums ${counterColor}`}>
+							<span
+								id="char-counter"
+								aria-live="polite"
+								aria-label={`${charCount} de ${MAX_CHARS} caracteres`}
+								className={`text-xs tabular-nums ${counterColor}`}>
 								{charCount}/{MAX_CHARS}
 							</span>
 						)}
 						<button
 							type="submit"
 							disabled={isLoading || !inputMessage.trim() || overLimit}
+							aria-label={isLoading ? "Enviando mensagem" : "Enviar mensagem"}
 							className="w-9 h-9 rounded-lg bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center text-white disabled:opacity-40 disabled:cursor-not-allowed hover:from-violet-500 hover:to-indigo-500 transition-all shadow-lg shadow-violet-900/30">
 							{isLoading ? (
 								<svg
