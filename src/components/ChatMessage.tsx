@@ -1,3 +1,5 @@
+import { HiSparkles } from "react-icons/hi2";
+import { HiUser } from "react-icons/hi";
 import type { Message } from "../store/chatStore";
 
 interface ChatMessageProps {
@@ -17,20 +19,33 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 	const isUser = message.role === "user";
 
 	return (
-		<div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
+		<div className={`flex gap-3 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
 			<div
-				className={`max-w-[75%] p-3 rounded-lg shadow-sm ${
+				className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
 					isUser
-						? "bg-blue-500 text-white rounded-tr-none"
-						: "bg-white dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded-tl-none"
+						? "bg-violet-600"
+						: "bg-linear-to-br from-violet-600 to-indigo-600"
+				} shadow-md`}>
+				{isUser ? (
+					<HiUser className="w-4 h-4 text-white" />
+				) : (
+					<HiSparkles className="w-4 h-4 text-white" />
+				)}
+			</div>
+
+			<div
+				className={`max-w-[75%] flex flex-col gap-1 ${
+					isUser ? "items-end" : "items-start"
 				}`}>
-				<div className="whitespace-pre-wrap">{message.content}</div>
 				<div
-					className={`text-xs mt-1 flex justify-end ${
-						isUser ? "text-blue-100" : "text-gray-500 dark:text-gray-300"
+					className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+						isUser
+							? "bg-linear-to-br from-violet-600 to-indigo-600 text-white rounded-tr-sm"
+							: "bg-slate-800 text-slate-100 border border-white/10 rounded-tl-sm"
 					}`}>
-					{formattedTime}
+					<p className="whitespace-pre-wrap">{message.content}</p>
 				</div>
+				<span className="text-xs text-slate-500 px-1">{formattedTime}</span>
 			</div>
 		</div>
 	);
