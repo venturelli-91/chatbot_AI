@@ -1,11 +1,10 @@
 import { useRef, useEffect } from "react";
 import { useChatStore } from "../store/chatStore";
 import ChatMessage from "./ChatMessage";
-import { HiSparkles } from "react-icons/hi2";
-import { HiXMark } from "react-icons/hi2";
+import { HiSparkles, HiXMark } from "react-icons/hi2";
 
 const ChatHistory = () => {
-	const { messages, error, clearError } = useChatStore();
+	const { messages, isLoading, error, clearError } = useChatStore();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -31,6 +30,22 @@ const ChatHistory = () => {
 					{messages.map((message) => (
 						<ChatMessage key={message.id} message={message} />
 					))}
+					{isLoading && (
+						<div className="flex gap-3">
+							<div className="shrink-0 w-8 h-8 rounded-full bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-md">
+								<HiSparkles className="w-4 h-4 text-white" />
+							</div>
+							<div className="px-4 py-3 bg-slate-800 border border-white/10 rounded-2xl rounded-tl-sm flex items-center gap-1.5">
+								{[0, 150, 300].map((delay) => (
+									<span
+										key={delay}
+										className="w-2 h-2 rounded-full bg-slate-400 animate-bounce"
+										style={{ animationDelay: `${delay}ms` }}
+									/>
+								))}
+							</div>
+						</div>
+					)}
 				</div>
 			)}
 
