@@ -2,9 +2,10 @@ import { useRef, useEffect } from "react";
 import { useChatStore } from "../store/chatStore";
 import ChatMessage from "./ChatMessage";
 import { HiSparkles } from "react-icons/hi2";
+import { HiXMark } from "react-icons/hi2";
 
 const ChatHistory = () => {
-	const { messages, error } = useChatStore();
+	const { messages, error, clearError } = useChatStore();
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -34,8 +35,15 @@ const ChatHistory = () => {
 			)}
 
 			{error && (
-				<div className="mt-4 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
-					<span className="font-semibold">Erro:</span> {error}
+				<div className="mt-4 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm flex items-center justify-between gap-3">
+					<span>
+						<span className="font-semibold">Erro:</span> {error}
+					</span>
+					<button
+						onClick={clearError}
+						className="shrink-0 w-5 h-5 flex items-center justify-center text-red-400/60 hover:text-red-400 transition-colors">
+						<HiXMark className="w-4 h-4" />
+					</button>
 				</div>
 			)}
 

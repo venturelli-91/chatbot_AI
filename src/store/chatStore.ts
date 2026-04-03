@@ -16,6 +16,7 @@ interface ChatState {
 	setInputMessage: (message: string) => void;
 	sendMessage: () => Promise<void>;
 	clearMessages: () => void;
+	clearError: () => void;
 }
 
 export const useChatStore = create<ChatState>((set, get) => ({
@@ -26,7 +27,9 @@ export const useChatStore = create<ChatState>((set, get) => ({
 
 	setInputMessage: (inputMessage) => set({ inputMessage }),
 
-	clearMessages: () => set({ messages: [] }),
+	clearError: () => set({ error: null }),
+
+	clearMessages: () => set({ messages: [], error: null }),
 
 	sendMessage: async () => {
 		const { inputMessage } = get();
