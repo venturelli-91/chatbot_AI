@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useChatStore } from "../store/chatStore";
 import ChatMessage from "./ChatMessage";
+import WelcomeSuggestions from "./WelcomeSuggestions";
 import { HiSparkles, HiXMark } from "react-icons/hi2";
 
 const ChatHistory = () => {
@@ -14,17 +15,7 @@ const ChatHistory = () => {
 	return (
 		<div className="flex flex-col min-h-full px-5 py-6">
 			{messages.length === 0 ? (
-				<div className="flex-1 flex flex-col items-center justify-center gap-4 text-slate-400 py-16">
-					<div className="w-16 h-16 rounded-full bg-linear-to-br from-violet-600/20 to-indigo-600/20 border border-violet-500/20 flex items-center justify-center">
-						<HiSparkles className="w-7 h-7 text-violet-400" />
-					</div>
-					<div className="text-center">
-						<p className="font-semibold text-slate-200 mb-1">
-							Como posso ajudar?
-						</p>
-						<p className="text-sm">Envie uma mensagem para começar</p>
-					</div>
-				</div>
+				<WelcomeSuggestions />
 			) : (
 				<div className="flex flex-col gap-5">
 					{messages.map((message) => (
