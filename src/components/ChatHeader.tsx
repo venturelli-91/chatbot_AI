@@ -2,10 +2,9 @@ import { HiSparkles } from "react-icons/hi2";
 import { HiTrash } from "react-icons/hi";
 import { Tooltip } from "flowbite-react";
 import { useChatStore } from "../store/chatStore";
-import ModelBadge from "./ModelBadge";
 
 const ChatHeader = () => {
-	const { messages, clearMessages } = useChatStore();
+	const { messages, clearMessages, activeModel } = useChatStore();
 	const hasMessages = messages.length > 0;
 
 	return (
@@ -26,7 +25,9 @@ const ChatHeader = () => {
 					</span>
 					<div className="flex items-center gap-2">
 						<span className="text-xs text-emerald-400 font-medium">Online</span>
-						<ModelBadge />
+					<span className="text-xs px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 border border-violet-500/30 font-medium">
+						{activeModel.split(":")[0]}
+					</span>
 					</div>
 				</div>
 			</div>
