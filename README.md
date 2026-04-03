@@ -14,40 +14,60 @@ A dark-themed conversational chatbot powered by a local [Ollama](https://ollama.
 
 ## Screenshots
 
+**Chat interface — dark & light**
+
 <div align="center">
-  <img src="public/chatbot_IA 1.png" alt="Chat interface" width="48%" />
-  &nbsp;
-  <img src="public/chatbot_IA 2.png" alt="Settings & history" width="48%" />
+  <table>
+    <tr>
+      <td><img src="public/1.png" alt="Chat — dark mode" /></td>
+      <td><img src="public/2.png" alt="Chat — light mode" /></td>
+    </tr>
+  </table>
+</div>
+
+**Landing page & features**
+
+<div align="center">
+  <table>
+    <tr>
+      <td><img src="public/3.png" alt="Landing page — dark" /></td>
+      <td><img src="public/4.png" alt="Landing page — light" /></td>
+    </tr>
+    <tr>
+      <td><img src="public/5.png" alt="Features section — dark" /></td>
+      <td></td>
+    </tr>
+  </table>
 </div>
 
 ---
 
 ## Features
 
-| Area | Details |
-|------|---------|
-| **Streaming** | Tokens appear as they are generated — animated cursor during generation |
-| **Conversation context** | Last 10 turns sent to the model on every request |
-| **Cancel mid-stream** | Stop button aborts the in-flight request via `AbortController` |
-| **Model picker** | Switch between any model installed in Ollama at runtime |
-| **Session history** | Past conversations saved to `localStorage` (up to 50 sessions) |
-| **Dark "Nebula" theme** | Violet/indigo accent on `slate-950` base; light mode toggle |
-| **Security** | SSRF prevention, in-memory rate limiting (20 req/min per IP), Zod validation, security headers |
-| **Error boundary** | Full-screen fallback UI on unexpected crashes |
-| **CI** | GitHub Actions — `tsc`, ESLint, Vitest on every push/PR |
+| Area                     | Details                                                                                        |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| **Streaming**            | Tokens appear as they are generated — animated cursor during generation                        |
+| **Conversation context** | Last 10 turns sent to the model on every request                                               |
+| **Cancel mid-stream**    | Stop button aborts the in-flight request via `AbortController`                                 |
+| **Model picker**         | Switch between any model installed in Ollama at runtime                                        |
+| **Session history**      | Past conversations saved to `localStorage` (up to 50 sessions)                                 |
+| **Dark "Nebula" theme**  | Violet/indigo accent on `slate-950` base; light mode toggle                                    |
+| **Security**             | SSRF prevention, in-memory rate limiting (20 req/min per IP), Zod validation, security headers |
+| **Error boundary**       | Full-screen fallback UI on unexpected crashes                                                  |
+| **CI**                   | GitHub Actions — `tsc`, ESLint, Vitest on every push/PR                                        |
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 15 (`pages/` router) |
-| Language | TypeScript 5 (strict) |
-| Styling | TailwindCSS v4 + Flowbite React |
-| State | Zustand 5 with `persist` middleware |
+| Layer      | Technology                             |
+| ---------- | -------------------------------------- |
+| Framework  | Next.js 15 (`pages/` router)           |
+| Language   | TypeScript 5 (strict)                  |
+| Styling    | TailwindCSS v4 + Flowbite React        |
+| State      | Zustand 5 with `persist` middleware    |
 | AI backend | Ollama local — default model `mistral` |
-| Testing | Vitest + React Testing Library + MSW |
+| Testing    | Vitest + React Testing Library + MSW   |
 
 ---
 
@@ -118,8 +138,8 @@ src/
 
 ## Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
+| Variable     | Default                  | Description                   |
+| ------------ | ------------------------ | ----------------------------- |
 | `OLLAMA_URL` | `http://localhost:11434` | Base URL of the Ollama server |
 
 ---
@@ -127,7 +147,6 @@ src/
 ## License
 
 MIT
-
 
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
