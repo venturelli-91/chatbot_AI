@@ -43,7 +43,7 @@ describe("chatStore", () => {
 							id: "1",
 							content: "Oi",
 							role: "user",
-							timestamp: new Date(),
+							timestamp: new Date().toISOString(),
 						},
 					],
 				}),

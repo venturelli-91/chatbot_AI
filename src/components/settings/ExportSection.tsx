@@ -40,9 +40,7 @@ const ExportSection = () => {
 				const time = new Intl.DateTimeFormat("pt-BR", {
 					hour: "2-digit",
 					minute: "2-digit",
-				}).format(
-					typeof m.timestamp === "string" ? new Date(m.timestamp) : m.timestamp
-				);
+				}).format(new Date(m.timestamp));
 				const role = m.role === "user" ? "Usuário" : "Assistente";
 				return `[${time}] ${role}:\n${m.content}`;
 			})

@@ -13,7 +13,7 @@ const makeMessage = (overrides: Partial<Message> = {}): Message => ({
 	id: "1",
 	content: "Olá, mundo!",
 	role: "user",
-	timestamp: new Date("2024-01-01T10:30:00"),
+	timestamp: new Date("2024-01-01T10:30:00").toISOString(),
 	...overrides,
 });
 
@@ -90,7 +90,7 @@ describe("ChatMessage", () => {
 		render(
 			<ChatMessage
 				message={makeMessage({
-					timestamp: "2024-01-01T14:00:00" as unknown as Date,
+					timestamp: "2024-01-01T14:00:00",
 				})}
 			/>,
 		);

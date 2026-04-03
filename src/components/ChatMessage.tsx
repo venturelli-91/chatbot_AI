@@ -15,11 +15,7 @@ const ChatMessage = ({ message, isStreaming = false }: ChatMessageProps) => {
 	const formattedTime = new Intl.DateTimeFormat("pt-BR", {
 		hour: "2-digit",
 		minute: "2-digit",
-	}).format(
-		typeof message.timestamp === "string"
-			? new Date(message.timestamp)
-			: message.timestamp,
-	);
+	}).format(new Date(message.timestamp));
 
 	const isUser = message.role === "user";
 

@@ -6,7 +6,7 @@ export interface Message {
 	id: string;
 	content: string;
 	role: "user" | "assistant";
-	timestamp: Date;
+	timestamp: string;
 }
 
 export interface ChatSettings {
@@ -115,7 +115,7 @@ export const useChatStore = create<ChatState>()(
 					id: userMsgId,
 					content: inputMessage,
 					role: "user",
-					timestamp: new Date(),
+					timestamp: new Date().toISOString(),
 				};
 
 				const isFirstMessage = messages.length === 0;
@@ -173,7 +173,7 @@ export const useChatStore = create<ChatState>()(
 								id: assistantMsgId,
 								content: "",
 								role: "assistant" as const,
-								timestamp: new Date(),
+								timestamp: new Date().toISOString(),
 							},
 						],
 						streamingMessageId: assistantMsgId,
