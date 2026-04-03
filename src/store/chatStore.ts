@@ -14,6 +14,7 @@ interface ChatState {
 	error: string | null;
 	activeModel: string;
 	availableModels: string[];
+	sessionTitle: string | null;
 
 	setInputMessage: (message: string) => void;
 	sendMessage: () => Promise<void>;
@@ -28,15 +29,16 @@ export const useChatStore = create<ChatState>((set, get) => ({
 	error: null,
 	activeModel: "mistral",
 	availableModels: [],
+	sessionTitle: null,
 
 	setInputMessage: (inputMessage) => set({ inputMessage }),
 
 	clearError: () => set({ error: null }),
 
-	clearMessages: () => set({ messages: [], error: null }),
+	clearMessages: () => set({ messages: [], error: null, sessionTitle: null }),
 
 	sendMessage: async () => {
-		const { inputMessage } = get();
+		const { inputMessage, messages } = get();
 		if (!inputMessage.trim()) return;
 
 		const userMessage: Message = {
@@ -46,11 +48,18 @@ export const useChatStore = create<ChatState>((set, get) => ({
 			timestamp: new Date(),
 		};
 
+		const isFirstMessage = messages.length === 0;
+		const newTitle = isFirstMessage
+			? inputMessage.trim().slice(0, 40) +
+			  (inputMessage.trim().length > 40 ? "…" : "")
+			: get().sessionTitle;
+
 		set((state) => ({
 			messages: [...state.messages, userMessage],
 			inputMessage: "",
 			isLoading: true,
 			error: null,
+			sessionTitle: newTitle,
 		}));
 
 		try {
