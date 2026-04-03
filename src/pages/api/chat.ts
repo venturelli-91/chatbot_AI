@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-const OLLAMA_BASE_URL = "http://localhost:11434";
+const DEFAULT_OLLAMA_URL = "http://localhost:11434";
 const DEFAULT_MODEL = "mistral";
 const DEFAULT_MAX_TOKENS = 300;
 
@@ -8,13 +8,12 @@ interface ChatRequestBody {
 	message: string;
 	model?: string;
 	maxTokens?: number;
+	ollamaUrl?: string;
 }
 
-async function getAvailableModels(): Promise<string[]> {
-	const response = await fetch(`${OLLAMA_BASE_URL}/api/tags`);
-
+async function getAvailableModels(baseUrl: string): Promise<string[]> {
+	const response = await fetch(`${baseUrl}/api/tags`);
 	if (!response.ok) return [];
-
 	const data = await response.json();
 	return data.models?.map((model: { name: string }) => model.name) || [];
 }
@@ -30,9 +29,10 @@ function resolveModel(requested: string, available: string[]): string {
 async function generateResponse(
 	message: string,
 	model: string,
-	maxTokens: number
+	maxTokens: number,
+	baseUrl: string
 ): Promise<string> {
-	const response = await fetch(`${OLLAMA_BASE_URL}/api/generate`, {
+	const response = await fetch(`${baseUrl}/api/generate`, {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({
@@ -64,7 +64,9 @@ export default async function handler(
 		return res.status(405).json({ error: "Método não permitido. Use POST." });
 	}
 
-	const { message, model, maxTokens } = req.body as ChatRequestBody;
+	const { message, model, maxTokens, ollamaUrl } =
+		req.body as ChatRequestBody;
+	const baseUrl = ollamaUrl || DEFAULT_OLLAMA_URL;
 
 	if (!message || typeof message !== "string") {
 		return res
@@ -73,7 +75,7 @@ export default async function handler(
 	}
 
 	try {
-		const availableModels = await getAvailableModels();
+		const availableModels = await getAvailableModels(baseUrl);
 
 		if (availableModels.length === 0) {
 			return res.status(503).json({
@@ -83,15 +85,13 @@ export default async function handler(
 			});
 		}
 
-		const modelToUse = resolveModel(
-			model || DEFAULT_MODEL,
-			availableModels
-		);
+		const modelToUse = resolveModel(model || DEFAULT_MODEL, availableModels);
 
 		const response = await generateResponse(
 			message,
 			modelToUse,
-			maxTokens ?? DEFAULT_MAX_TOKENS
+			maxTokens ?? DEFAULT_MAX_TOKENS,
+			baseUrl
 		);
 
 		return res.status(200).json({
@@ -106,15 +106,13 @@ export default async function handler(
 		if (isConnectionError) {
 			return res.status(503).json({
 				error: "Serviço Ollama não está disponível",
-				message:
-					"Verifique se o Ollama está rodando em http://localhost:11434",
+				message: `Verifique se o Ollama está rodando em ${baseUrl}`,
 			});
 		}
 
 		return res.status(500).json({
 			error: "Erro ao processar a requisição",
-			message:
-				error instanceof Error ? error.message : "Erro desconhecido",
+			message: error instanceof Error ? error.message : "Erro desconhecido",
 		});
 	}
 }

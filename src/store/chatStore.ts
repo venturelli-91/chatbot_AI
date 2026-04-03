@@ -8,6 +8,12 @@ export interface Message {
 	timestamp: Date;
 }
 
+export interface ChatSettings {
+	model: string;
+	maxTokens: number;
+	ollamaUrl: string;
+}
+
 interface ChatState {
 	messages: Message[];
 	inputMessage: string;
@@ -16,12 +22,20 @@ interface ChatState {
 	activeModel: string;
 	availableModels: string[];
 	sessionTitle: string | null;
+	settings: ChatSettings;
 
 	setInputMessage: (message: string) => void;
 	sendMessage: () => Promise<void>;
 	clearMessages: () => void;
 	clearError: () => void;
+	updateSettings: (patch: Partial<ChatSettings>) => void;
 }
+
+const DEFAULT_SETTINGS: ChatSettings = {
+	model: "mistral",
+	maxTokens: 300,
+	ollamaUrl: "http://localhost:11434",
+};
 
 export const useChatStore = create<ChatState>()(
 	persist(
@@ -33,6 +47,7 @@ export const useChatStore = create<ChatState>()(
 			activeModel: "mistral",
 			availableModels: [],
 			sessionTitle: null,
+			settings: DEFAULT_SETTINGS,
 
 			setInputMessage: (inputMessage) => set({ inputMessage }),
 
@@ -41,8 +56,11 @@ export const useChatStore = create<ChatState>()(
 			clearMessages: () =>
 				set({ messages: [], error: null, sessionTitle: null }),
 
+			updateSettings: (patch) =>
+				set((state) => ({ settings: { ...state.settings, ...patch } })),
+
 			sendMessage: async () => {
-				const { inputMessage, messages } = get();
+				const { inputMessage, messages, settings } = get();
 				if (!inputMessage.trim()) return;
 
 				const userMessage: Message = {
@@ -72,8 +90,9 @@ export const useChatStore = create<ChatState>()(
 						headers: { "Content-Type": "application/json" },
 						body: JSON.stringify({
 							message: userMessage.content,
-							model: "mistral",
-							maxTokens: 300,
+							model: settings.model,
+							maxTokens: settings.maxTokens,
+							ollamaUrl: settings.ollamaUrl,
 						}),
 					});
 
@@ -120,6 +139,7 @@ export const useChatStore = create<ChatState>()(
 				messages: state.messages,
 				activeModel: state.activeModel,
 				sessionTitle: state.sessionTitle,
+				settings: state.settings,
 			}),
 		}
 	)
