@@ -1,8 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useChatStore } from "../store/chatStore";
 import ChatMessage from "./ChatMessage";
-import { Alert } from "flowbite-react";
-import { HiInformationCircle } from "react-icons/hi";
+import { HiSparkles } from "react-icons/hi2";
 
 const ChatHistory = () => {
 	const { messages, error } = useChatStore();
@@ -13,15 +12,21 @@ const ChatHistory = () => {
 	}, [messages]);
 
 	return (
-		<div className="flex-1 overflow-y-auto px-4 py-4 h-[400px]">
+		<div className="flex flex-col min-h-full px-5 py-6">
 			{messages.length === 0 ? (
-				<div className="h-full flex flex-col items-center justify-center text-gray-500">
-					<p className="text-center font-medium">
-						Envie uma mensagem para começar a conversa
-					</p>
+				<div className="flex-1 flex flex-col items-center justify-center gap-4 text-slate-400 py-16">
+					<div className="w-16 h-16 rounded-full bg-linear-to-br from-violet-600/20 to-indigo-600/20 border border-violet-500/20 flex items-center justify-center">
+						<HiSparkles className="w-7 h-7 text-violet-400" />
+					</div>
+					<div className="text-center">
+						<p className="font-semibold text-slate-200 mb-1">
+							Como posso ajudar?
+						</p>
+						<p className="text-sm">Envie uma mensagem para começar</p>
+					</div>
 				</div>
 			) : (
-				<div className="space-y-3">
+				<div className="flex flex-col gap-5">
 					{messages.map((message) => (
 						<ChatMessage key={message.id} message={message} />
 					))}
@@ -29,12 +34,9 @@ const ChatHistory = () => {
 			)}
 
 			{error && (
-				<Alert
-					color="failure"
-					icon={HiInformationCircle}
-					className="mt-4">
-					<span className="font-medium">Erro!</span> {error}
-				</Alert>
+				<div className="mt-4 px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
+					<span className="font-semibold">Erro:</span> {error}
+				</div>
 			)}
 
 			<div ref={messagesEndRef} />
