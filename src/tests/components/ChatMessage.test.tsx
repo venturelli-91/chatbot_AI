@@ -26,7 +26,10 @@ describe("ChatMessage", () => {
 	it("renderiza conteúdo da mensagem do assistente", () => {
 		render(
 			<ChatMessage
-				message={makeMessage({ role: "assistant", content: "Como posso ajudar?" })}
+				message={makeMessage({
+					role: "assistant",
+					content: "Como posso ajudar?",
+				})}
 			/>,
 		);
 		expect(screen.getByText("Como posso ajudar?")).toBeInTheDocument();
@@ -35,7 +38,10 @@ describe("ChatMessage", () => {
 	it("tem aria-label correto para mensagem do usuário", () => {
 		render(<ChatMessage message={makeMessage({ role: "user" })} />);
 		const article = screen.getByRole("article");
-		expect(article).toHaveAttribute("aria-label", expect.stringContaining("você"));
+		expect(article).toHaveAttribute(
+			"aria-label",
+			expect.stringContaining("você"),
+		);
 	});
 
 	it("tem aria-label correto para mensagem do assistente", () => {
@@ -55,9 +61,7 @@ describe("ChatMessage", () => {
 			screen.queryByRole("button", { name: /copiar/i }),
 		).not.toBeInTheDocument();
 
-		rerender(
-			<ChatMessage message={makeMessage({ role: "assistant" })} />,
-		);
+		rerender(<ChatMessage message={makeMessage({ role: "assistant" })} />);
 		expect(
 			screen.getByRole("button", { name: /copiar mensagem/i }),
 		).toBeInTheDocument();
@@ -85,7 +89,9 @@ describe("ChatMessage", () => {
 	it("aceita timestamp como string ISO", () => {
 		render(
 			<ChatMessage
-				message={makeMessage({ timestamp: "2024-01-01T14:00:00" as unknown as Date })}
+				message={makeMessage({
+					timestamp: "2024-01-01T14:00:00" as unknown as Date,
+				})}
 			/>,
 		);
 		// não deve lançar erro e deve renderizar o conteúdo

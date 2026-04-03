@@ -7,9 +7,7 @@ export function isLocalhostUrl(raw: string): boolean {
 		const { hostname, protocol } = new URL(raw);
 		if (protocol !== "http:" && protocol !== "https:") return false;
 		return (
-			hostname === "localhost" ||
-			hostname === "127.0.0.1" ||
-			hostname === "::1"
+			hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1"
 		);
 	} catch {
 		return false;

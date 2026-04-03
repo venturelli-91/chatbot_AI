@@ -73,11 +73,11 @@ export const useChatStore = create<ChatState>()(
 			},
 
 			updateSettings: (patch) =>
-					set((state) => ({
-						settings: { ...state.settings, ...patch },
-						// mantém activeModel sincronizado quando model é alterado
-						...(patch.model ? { activeModel: patch.model } : {}),
-					})),
+				set((state) => ({
+					settings: { ...state.settings, ...patch },
+					// mantém activeModel sincronizado quando model é alterado
+					...(patch.model ? { activeModel: patch.model } : {}),
+				})),
 			sendMessage: async () => {
 				const { inputMessage, messages, settings } = get();
 				if (!inputMessage.trim()) return;
@@ -93,7 +93,7 @@ export const useChatStore = create<ChatState>()(
 				const isFirstMessage = messages.length === 0;
 				const newTitle = isFirstMessage
 					? inputMessage.trim().slice(0, 40) +
-					  (inputMessage.trim().length > 40 ? "…" : "")
+						(inputMessage.trim().length > 40 ? "…" : "")
 					: get().sessionTitle;
 
 				set((state) => ({
@@ -120,7 +120,7 @@ export const useChatStore = create<ChatState>()(
 
 					if (!response.ok) {
 						throw new Error(
-							data.message || data.error || "Erro ao processar solicitação"
+							data.message || data.error || "Erro ao processar solicitação",
 						);
 					}
 
@@ -164,6 +164,6 @@ export const useChatStore = create<ChatState>()(
 				sessionTitle: state.sessionTitle,
 				settings: state.settings,
 			}),
-		}
-	)
+		},
+	),
 );

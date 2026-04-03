@@ -87,7 +87,10 @@ export default async function handler(
 	}
 
 	const { message, model, maxTokens, ollamaUrl } = parsed.data;
-	const baseUrl = validateOllamaUrl(ollamaUrl ?? DEFAULT_OLLAMA_URL, DEFAULT_OLLAMA_URL);
+	const baseUrl = validateOllamaUrl(
+		ollamaUrl ?? DEFAULT_OLLAMA_URL,
+		DEFAULT_OLLAMA_URL,
+	);
 
 	try {
 		const availableModels = await getAvailableModels(baseUrl);
