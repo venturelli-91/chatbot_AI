@@ -3,10 +3,10 @@ import { z } from "zod";
 import { validateOllamaUrl } from "../../lib/validateUrl";
 import { checkRateLimit } from "../../lib/rateLimit";
 import { OLLAMA_DEFAULT_URL } from "../../lib/env";
+import { fetchWithTimeout } from "../../lib/fetchWithTimeout";
 
 const DEFAULT_MODEL = "mistral";
 const DEFAULT_MAX_TOKENS = 300;
-const FETCH_TIMEOUT_MS = 60_000;
 const MAX_CONTEXT_MESSAGES = 10;
 
 function getClientIp(req: NextApiRequest): string {
@@ -31,18 +31,6 @@ const ChatSchema = z.object({
 	ollamaUrl: z.string().url("URL do Ollama inválida").optional(),
 	history: z.array(HistoryMessageSchema).max(20).optional(),
 });
-
-function fetchWithTimeout(
-	url: string,
-	init: RequestInit,
-	timeoutMs = FETCH_TIMEOUT_MS,
-): Promise<Response> {
-	const controller = new AbortController();
-	const id = setTimeout(() => controller.abort(), timeoutMs);
-	return fetch(url, { ...init, signal: controller.signal }).finally(() =>
-		clearTimeout(id),
-	);
-}
 
 async function getAvailableModels(baseUrl: string): Promise<string[]> {
 	const response = await fetchWithTimeout(`${baseUrl}/api/tags`, {}, 10_000);
