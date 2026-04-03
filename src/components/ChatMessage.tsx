@@ -65,7 +65,9 @@ const ChatMessage = ({ message }: ChatMessageProps) => {
 							content={copied ? "Copiado!" : "Copiar"}
 							placement="top">
 							<button
-								onClick={handleCopy}							aria-label={copied ? "Mensagem copiada" : "Copiar mensagem"}								className="absolute -top-2 -right-2 w-6 h-6 rounded-md bg-[var(--cb3)] border border-[var(--cbr)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
+								onClick={handleCopy}
+								aria-label={copied ? "Mensagem copiada" : "Copiar mensagem"}
+								className="absolute -top-2 -right-2 w-6 h-6 rounded-md bg-[var(--cb3)] border border-[var(--cbr)] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-sm">
 								{copied ? (
 									<HiCheck className="w-3 h-3 text-emerald-400" />
 								) : (

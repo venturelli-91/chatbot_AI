@@ -15,7 +15,10 @@ const ChatHeader = () => {
 					<div className="w-10 h-10 rounded-full bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-900/40">
 						<HiSparkles className="w-5 h-5 text-white" />
 					</div>
-					<span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-slate-900 rounded-full" aria-hidden="true" />
+					<span
+						className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-slate-900 rounded-full"
+						aria-hidden="true"
+					/>
 				</div>
 				<div className="flex flex-col gap-1">
 					<span className="font-semibold text-[var(--ct1)] text-sm leading-tight">

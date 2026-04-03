@@ -6,7 +6,10 @@ const DEFAULT_MODEL = "mistral";
 const DEFAULT_MAX_TOKENS = 300;
 
 const ChatSchema = z.object({
-	message: z.string().min(1, "Mensagem não pode ser vazia").max(4000, "Mensagem muito longa"),
+	message: z
+		.string()
+		.min(1, "Mensagem não pode ser vazia")
+		.max(4000, "Mensagem muito longa"),
 	model: z.string().optional(),
 	maxTokens: z.number().int().min(50).max(4000).optional(),
 	ollamaUrl: z.string().url("URL do Ollama inválida").optional(),
@@ -31,7 +34,7 @@ async function generateResponse(
 	message: string,
 	model: string,
 	maxTokens: number,
-	baseUrl: string
+	baseUrl: string,
 ): Promise<string> {
 	const response = await fetch(`${baseUrl}/api/generate`, {
 		method: "POST",
@@ -49,7 +52,7 @@ async function generateResponse(
 		throw new Error(
 			errorData?.error
 				? `Erro na API do Ollama: ${response.statusText} - ${errorData.error}`
-				: `Erro na API do Ollama: ${response.statusText}`
+				: `Erro na API do Ollama: ${response.statusText}`,
 		);
 	}
 
@@ -59,7 +62,7 @@ async function generateResponse(
 
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse
+	res: NextApiResponse,
 ) {
 	if (req.method !== "POST") {
 		return res.status(405).json({ error: "Método não permitido. Use POST." });
@@ -68,7 +71,8 @@ export default async function handler(
 	const parsed = ChatSchema.safeParse(req.body);
 	if (!parsed.success) {
 		return res.status(400).json({
-			error: parsed.error.issues[0]?.message ?? "Dados inválidos na requisição.",
+			error:
+				parsed.error.issues[0]?.message ?? "Dados inválidos na requisição.",
 		});
 	}
 
@@ -92,7 +96,7 @@ export default async function handler(
 			message,
 			modelToUse,
 			maxTokens ?? DEFAULT_MAX_TOKENS,
-			baseUrl
+			baseUrl,
 		);
 
 		return res.status(200).json({
