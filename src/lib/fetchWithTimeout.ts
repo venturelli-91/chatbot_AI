@@ -9,3 +9,14 @@ export function fetchWithTimeout(
 		clearTimeout(id),
 	);
 }
+
+export async function getAvailableModels(baseUrl: string): Promise<string[]> {
+	try {
+		const response = await fetchWithTimeout(`${baseUrl}/api/tags`, {}, 10_000);
+		if (!response.ok) return [];
+		const data = await response.json();
+		return (data.models ?? []).map((m: { name: string }) => m.name);
+	} catch {
+		return [];
+	}
+}

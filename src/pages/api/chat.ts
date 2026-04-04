@@ -3,7 +3,7 @@ import { z } from "zod";
 import { validateOllamaUrl } from "../../lib/validateUrl";
 import { checkRateLimit } from "../../lib/rateLimit";
 import { OLLAMA_DEFAULT_URL } from "../../lib/env";
-import { fetchWithTimeout } from "../../lib/fetchWithTimeout";
+import { fetchWithTimeout, getAvailableModels } from "../../lib/fetchWithTimeout";
 
 const DEFAULT_MODEL = "mistral";
 const DEFAULT_MAX_TOKENS = 300;
@@ -31,13 +31,6 @@ const ChatSchema = z.object({
 	ollamaUrl: z.string().url("URL do Ollama inválida").optional(),
 	history: z.array(HistoryMessageSchema).max(20).optional(),
 });
-
-async function getAvailableModels(baseUrl: string): Promise<string[]> {
-	const response = await fetchWithTimeout(`${baseUrl}/api/tags`, {}, 10_000);
-	if (!response.ok) return [];
-	const data = await response.json();
-	return data.models?.map((m: { name: string }) => m.name) ?? [];
-}
 
 function resolveModel(requested: string, available: string[]): string {
 	const base = requested.split(":")[0];

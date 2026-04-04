@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { validateOllamaUrl } from "../../lib/validateUrl";
 import { OLLAMA_DEFAULT_URL } from "../../lib/env";
-import { fetchWithTimeout } from "../../lib/fetchWithTimeout";
+import { getAvailableModels } from "../../lib/fetchWithTimeout";
 
 export default async function handler(
 	req: NextApiRequest,
@@ -19,15 +19,7 @@ export default async function handler(
 	const ollamaUrl = validateOllamaUrl(rawUrl, OLLAMA_DEFAULT_URL);
 
 	try {
-		const response = await fetchWithTimeout(`${ollamaUrl}/api/tags`, {}, 10_000);
-		if (!response.ok) {
-			return res
-				.status(502)
-				.json({ error: "Falha ao conectar com o Ollama", models: [] });
-		}
-		const data = await response.json();
-		const models: string[] =
-			data.models?.map((m: { name: string }) => m.name) ?? [];
+		const models = await getAvailableModels(ollamaUrl);
 		return res.status(200).json({ models });
 	} catch {
 		return res
