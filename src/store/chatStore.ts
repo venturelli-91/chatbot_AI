@@ -97,8 +97,6 @@ export const useChatStore = create<ChatState>()(
 			updateSettings: (patch) =>
 				set((state) => ({
 					settings: { ...state.settings, ...patch },
-					// mantém activeModel sincronizado quando model é alterado
-					...(patch.model ? { activeModel: patch.model } : {}),
 				})),
 			sendMessage: async () => {
 				const { inputMessage, messages, settings } = get();
